@@ -26,6 +26,11 @@ Current built-in capabilities:
 - `hybrid_astar_planner/`: one-shot runner and direct path-planning Tool backed by
   the standalone C++ Hybrid A* executable.
 - `openarm_reach/`: OpenArm forward and inverse kinematics planning Tools.
+- `openarm_motion/`: OpenArm arm-motion Tools backed by MoveIt 2.
+  `plan_openarm_pose` plans a collision-checked motion of the wrist to x, y, z
+  in `arm_origin`, keeping the current orientation. `execute_openarm_plan` runs
+  the stored plan through `/execute_trajectory`. Requires the simulator
+  launched with `moveit:=true`.
 - `gazebo_realsense_camera/`: Gazebo RealSense RGB-D listener lifecycle Tools:
   `start_gazebo_realsense_camera`, `get_gazebo_realsense_camera_status`, and
   `stop_gazebo_realsense_camera`. The listener relays images to LCM channels
