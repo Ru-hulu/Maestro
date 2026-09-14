@@ -28,7 +28,9 @@ Current built-in capabilities:
 - `openarm_reach/`: OpenArm forward and inverse kinematics planning Tools.
 - `openarm_motion/`: OpenArm arm-motion Tools backed by MoveIt 2.
   `plan_openarm_pose` plans a collision-checked motion of the wrist to x, y, z
-  in `arm_origin`, keeping the current orientation. `execute_openarm_plan` runs
+  in `arm_origin`. The wrist keeps its current orientation unless
+  `roll_deg`, `pitch_deg` or `yaw_deg` rotate it about the `arm_origin` axes.
+  `execute_openarm_plan` runs
   the stored plan through `/execute_trajectory`. Requires the simulator
   launched with `moveit:=true`.
 - `gazebo_realsense_camera/`: Gazebo RealSense RGB-D listener lifecycle Tools:

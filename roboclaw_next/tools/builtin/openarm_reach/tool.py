@@ -19,6 +19,16 @@ class EePoseResult(BaseModel):
     pose: list[float] = Field(
         description="EE pose [px, py, pz, qw, qx, qy, qz] in metres and unit quaternion.",
     )
+    rpy_deg: list[float] = Field(
+        description=(
+            "EE orientation as [roll, pitch, yaw] in degrees: rotations about the "
+            "fixed arm_origin x, y and z axes, applied in that order. The gripper "
+            "points straight down at [0, 0, any yaw]. Near pitch +-90 roll and yaw "
+            "are not unique. The roll_deg, pitch_deg and yaw_deg of "
+            "plan_openarm_pose are rotations added on top of the current "
+            "orientation, not absolute angles."
+        ),
+    )
     joints: list[float] = Field(
         description=(
             "The 7 arm joints this pose was computed from, read from "
