@@ -21,7 +21,13 @@ import sys
 from pathlib import Path
 from typing import cast
 
-from roboclaw_next.agent import AgentMessage, AgentRuntime, AgentSession, ContextBuilder
+from roboclaw_next.agent import (
+    AgentMessage,
+    AgentRuntime,
+    AgentSession,
+    ContextBuilder,
+    ConversationLog,
+)
 from roboclaw_next.agent.budget import Budget, TokenEstimator
 from roboclaw_next.llm import create_llm_provider
 from roboclaw_next.llm.types import ProviderName
@@ -69,10 +75,50 @@ def resolve_provider_name() -> ProviderName:
     return cast(ProviderName, raw_provider)
 
 
+def should_autostart_perception() -> bool:
+    return os.environ.get("ROBOCLAW_AUTOSTART_PERCEPTION", "0") == "1"
+
+
+async def start_required_service(
+    runtime: MCPClientRuntime,
+    tool_name: str,
+    arguments: dict[str, object],
+) -> None:
+    print(f"[startup] {tool_name} ...", flush=True)
+    result = await runtime.call_tool(tool_name, arguments)
+    status = getattr(result, "structuredContent", None)
+    payload = status.get("result", status) if isinstance(status, dict) else None
+    if (
+        bool(getattr(result, "isError", False))
+        or not isinstance(payload, dict)
+        or payload.get("state") != "running"
+    ):
+        raise RuntimeError(f"{tool_name} failed: {status or result}")
+    print(f"[startup] {payload.get('message', tool_name + ' is running.')}")
+
+
+async def autostart_perception(runtime: MCPClientRuntime) -> None:
+    await start_required_service(
+        runtime,
+        "start_gazebo_realsense_camera",
+        {"frame_timeout_sec": 30.0},
+    )
+    await start_required_service(runtime, "start_sam3_perception", {})
+
+
 async def main() -> None:
     # 在读取任何配置之前载入 .env；MCP server 子进程通过 os.environ.copy()
     # 继承这些变量，因此工具侧也能看到。
     load_dotenv(REPOSITORY_ROOT / ".env")
+    conversation_log_path = Path(
+        os.environ.get(
+            "ROBOCLAW_CONVERSATION_LOG",
+            str(REPOSITORY_ROOT / "runtime_data" / "conversations" / "latest.jsonl"),
+        )
+    )
+    conversation_log = ConversationLog(conversation_log_path)
+    conversation_log.reset()
+    print(f"[agent] conversation log: {conversation_log_path.resolve()}")
 
     config = StdioMCPServerConfig(
         name="roboclaw_tools",
@@ -90,6 +136,9 @@ async def main() -> None:
         for name in registry.names:
             print(f"- {name}")
 
+        if should_autostart_perception():
+            await autostart_perception(runtime)
+
         provider = create_llm_provider(
             resolve_provider_name(),
             temperature=0,
@@ -106,7 +155,8 @@ async def main() -> None:
                         "answer instead of repeating status checks."
                     ),
                 ),
-            ]
+            ],
+            conversation_log=conversation_log,
         )
         # estimator 由 ContextBuilder 与 AgentRuntime 共用，这样校正系数在一处
         # 累积：Runtime 每轮用真实用量校准它，ContextBuilder 用它判断预算。
