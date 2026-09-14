@@ -75,7 +75,9 @@ class ContextBuilder:
         # TODO: 尤其这里的压缩单位是<user> <user>，所以如果用户下达了一次指令，这次本身的上下文很长，就会爆。
         # 但是我们不考虑这种情况
         if new_turns and self._over_budget(session, system_end, tool_definitions):
-            await self._update_summary(session, new_turns)
+            await self._update_summary(
+                session, new_turns, system_end, tool_definitions
+            )
 
         context = self._assemble(session, system_end)
 
@@ -130,7 +132,16 @@ class ContextBuilder:
         self,
         session: AgentSession,
         turns: list[_ConversationTurn],
+        system_end: int,
+        tool_definitions: list[dict[str, Any]] | None,
     ) -> None:
+        # 压缩前的估算：必须在推进 cursor 之前取，否则量到的是压缩后的上下文。
+        estimated_before: int | None = None
+        if self.estimator is not None and self.budget is not None:
+            estimated_before = self._estimate(
+                self._assemble(session, system_end), tool_definitions
+            )
+
         messages_to_summarize: list[AgentMessage] = []
         for turn in turns:
             messages_to_summarize.extend(session.messages[turn.start : turn.end])
@@ -186,6 +197,34 @@ class ContextBuilder:
 
         session.summary = summary
         session.summary_cursor = turns[-1].end
+        self._log_compression(session, turns, estimated_before)
+
+    def _log_compression(
+        self,
+        session: AgentSession,
+        turns: list[_ConversationTurn],
+        estimated_before: int | None,
+    ) -> None:
+        """把一次压缩写进会话日志，便于事后核对压缩是否按预期发生。"""
+
+        log = session.conversation_log
+        if log is None:
+            return
+        fields: dict[str, Any] = {
+            "summary_cursor": session.summary_cursor,
+            "summarized_turns": len(turns),
+            "messages_total": len(session.messages),
+            "summary_chars": len(session.summary or ""),
+        }
+        if self.budget is not None:
+            fields["trigger_tokens"] = self.budget.trigger
+        if estimated_before is not None:
+            fields["estimated_tokens_before"] = estimated_before
+        log.append_event(
+            session_id=session.session_id,
+            event="context_compression",
+            **fields,
+        )
 
 
 # 示例：索引 0 是系统提示词，1–4 是已完成的第一轮，5 是尚未完成的第二轮。
