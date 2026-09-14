@@ -241,6 +241,7 @@
     .direction .n { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .1em; }
     .direction h3 { font-size: 17px; margin: 18px 0 8px; }
     .direction p { color: var(--text-2); font-size: 13.5px; margin: 0; }
+    .roboclaw-vision { margin-top: 28px; }
     .vision-loop { margin-top: 26px; padding: 18px 22px; border-left: 3px solid var(--accent); background: var(--accent-soft); font-weight: 650; }
     .landscape-thesis { margin: 0 0 28px; padding: 22px 26px; border: 1px solid #cbdceb; border-left: 4px solid var(--accent); background: var(--accent-soft); }
     .landscape-thesis .eyebrow { display: block; margin-bottom: 7px; color: var(--accent); font-size: 11.5px; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; }
@@ -342,7 +343,7 @@
         <a href="#overview"><span class="zh">核心结论</span><span class="en">Key findings</span></a>
         <a href="#landscape">Landscape</a>
         <a href="#coverage"><span class="zh">Demo 对比</span><span class="en">Demo comparison</span></a>
-        <a href="#roboclaw"><span class="zh">项目全景</span><span class="en">Project landscape</span></a>
+        <a href="#roboclaw"><span class="zh">缺口与方案</span><span class="en">Gap &amp; RoboClaw</span></a>
         <a href="#refs"><span class="zh">资料来源</span><span class="en">Sources</span></a>
       </nav>
       <div class="lang" role="group" aria-label="Language">
@@ -359,17 +360,17 @@
       <div class="eyebrow"><span class="zh">文献与项目调研 · 2026 年 9 月</span><span class="en">Literature &amp; project review · September 2026</span></div>
       <h1><span class="zh">机器人 Agent Harness：现状与缺口</span><span class="en">Robot Agent Harnesses: Where the Field Stands</span></h1>
       <p class="thesis">
-        <span class="zh">现在的机器人 Agent 大多能调 ROS 技能或 VLA 策略，但两类都接、还能根据任务状态决定用哪个的项目很少。</span>
-        <span class="en">Most robot agents today can call either ROS skills or VLA policies. Very few connect both and decide which one to use based on task state.</span>
+        <span class="zh">现在的机器人 Agent 大多支持调用 ROS 技能或 VLA 策略，但两类都接、还能根据实时的环境和任务状态决定用哪个的项目很少。</span>
+        <span class="en">Most robot agents today can call either ROS skills or VLA policies. Very few connect both and decide which one to use from the live environment and task state.</span>
       </p>
       <div class="meta">
 
-        <span><span class="zh">RoboClaw</span><span class="en">Group meeting · RoboClaw</span></span>
+        <span><span class="zh">组会 · RoboClaw</span><span class="en">Group meeting · RoboClaw</span></span>
         <span><span class="zh">资料核对于 2026-09-11</span><span class="en">Sources checked 11 Sep 2026</span></span>
       </div>
       <dl class="scope">
         <dt><span class="zh">重点调研</span><span class="en">Reviewed</span></dt>
-        <dd><span class="zh">调研包括 21 个代表项目；对其中 HoloAgent-0、RoboOS、Thea、DimOS 与 Hi-VLA做深度拆解</span><span class="en">The review covers 21 representative projects; HoloAgent-0, RoboOS, Thea, DimOS and the Hi-VLA Design Study receive deep dives</span></dd>
+        <dd><span class="zh">深度拆解 HoloAgent-0、RoboOS、Thea、DimOS 与 Hi-VLA Design Study</span><span class="en">Deep dives into HoloAgent-0, RoboOS, Thea, DimOS and the Hi-VLA Design Study</span></dd>
         <dt><span class="zh">背景参照</span><span class="en">Context</span></dt>
         <dd><span class="zh">以 LLM 决策为共同前提，分别比较 ROS / Controller 与 VLA 接入，并调查上下文、记忆和验证恢复能力</span><span class="en">Assumes LLM decision-making, compares ROS / controller and VLA integration independently, and examines context, memory, verification and recovery</span></dd>
       </dl>
@@ -403,8 +404,8 @@
           <article class="summary-item key">
             <div class="index">03 · <span class="zh">缺口</span><span class="en">the gap</span></div>
             <h3><span class="zh">能在 ROS 和 VLA 之间切换的很少</span><span class="en">Few can switch between ROS and VLA</span></h3>
-            <p><span class="zh">Thea 能让 Agent 在几个 VLA 之间挑，是深拆样本里最接近的；OpenRAL、RoboNeuron、Cyclo 里 ROS 和 VLA 都有。但根据能力、风险和历史成功率现场决定用哪个，目前还没有成熟的公开实现。</span>
-              <span class="en">Thea lets the agent pick among several VLAs, the closest of the deep dives; OpenRAL, RoboNeuron and Cyclo include both ROS and VLA. But no public implementation yet decides on the spot, from capability, risk and past success rate, which one to use.</span></p>
+            <p><span class="zh">深拆样本里，HoloAgent-0 有 ROS 也有学习模型，但每个技能绑死一个后端；Thea 能在几个 VLA 之间挑，但不涉及 ROS。在同一任务中按实时环境和执行状态切换两者的，目前还没有成熟的公开实现。</span>
+              <span class="en">Among the deep dives, HoloAgent-0 has ROS and learned models but binds each skill to one backend; Thea picks among several VLAs but has no ROS side. No public implementation yet switches between the two within one task based on live environment and execution state.</span></p>
           </article>
         </div>
 
@@ -476,8 +477,8 @@
       <div class="content wide">
         <div class="landscape-thesis">
           <span class="eyebrow"><span class="zh">本次调研的核心判断</span><span class="en">Central finding</span></span>
-          <p><span class="zh">把 ROS 和 VLA 都包成 Skill 给 LLM 调用，很多项目已经做到了。难的是后面这些：什么时候用哪个、两者怎么交接、执行中怎么盯、失败了怎么恢复、世界状态怎么更新，以及怎么根据以往的执行结果调整选择。</span>
-            <span class="en">Many projects already wrap both ROS and VLA as skills an LLM can call. The hard part comes after: when to use which, how to hand over between them, how to watch execution, how to recover from failure, how to keep world state up to date, and how to adjust choices based on past runs.</span></p>
+          <p><span class="zh">把 ROS 和 VLA 都包成 Skill 给 LLM 调用，部分项目已经能够做到。当前缺口主要集中在什么时候用哪个、两者怎么交接、执行中怎么盯、失败了怎么恢复、世界状态怎么更新，以及怎么根据以往的执行结果调整选择。</span>
+            <span class="en">Some projects can already wrap both ROS and VLA as skills an LLM can call. The gap lies in what comes next: when to use which, how to hand over between them, how to watch execution, how to recover from failure, how to keep world state up to date, and how to adjust choices based on past runs.</span></p>
         </div>
         <!-- EDIT: landscape figure. Move a point by editing its cx/cy and its label x/y (both zh and en <text>).
              Plot area: x 110→860 (deterministic → learned), y 420→40 (stateless → structured). -->
@@ -512,12 +513,12 @@
               <text class="en" transform="translate(58 230) rotate(-90)" text-anchor="middle" font-weight="700" fill="#475467" letter-spacing=".06em">WORLD STRUCTURE KEPT BY THE RUNTIME</text>
             </g>
 
-            <!-- emerging area -->
-            <ellipse cx="600" cy="66" rx="132" ry="28" fill="#eef3f8" stroke="#1f4e79" stroke-width="1.2" stroke-dasharray="5 4"/>
-            <text class="zh" x="600" y="62" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1f4e79">少量探索：显式 ROS ↔ VLA 路由</text>
-            <text class="en" x="600" y="62" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1f4e79">Emerging: explicit ROS ↔ VLA routing</text>
-            <text class="zh" x="600" y="78" text-anchor="middle" font-size="11.5" fill="#1f4e79">在线选择 + 执行后验证（§04）</text>
-            <text class="en" x="600" y="78" text-anchor="middle" font-size="11.5" fill="#1f4e79">online choice + post-action verification (§04)</text>
+            <!-- gap / RoboClaw target area -->
+            <ellipse cx="600" cy="66" rx="150" ry="28" fill="#eef3f8" stroke="#1f4e79" stroke-width="1.2" stroke-dasharray="5 4"/>
+            <text class="zh" x="600" y="62" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1f4e79">缺口：按实时状态切换 ROS ↔ VLA</text>
+            <text class="en" x="600" y="62" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1f4e79">Gap: switch ROS ↔ VLA on live state</text>
+            <text class="zh" x="600" y="78" text-anchor="middle" font-size="11.5" fill="#1f4e79">RoboClaw 的目标位置（§04）</text>
+            <text class="en" x="600" y="78" text-anchor="middle" font-size="11.5" fill="#1f4e79">RoboClaw’s target (§04)</text>
 
             <!-- context systems -->
             <g font-size="13" fill="#475467">
@@ -558,10 +559,10 @@
               <text class="en" x="766" y="331" text-anchor="end" font-size="11.5" fill="#667085">VLM → VLA hierarchy study</text>
             </g>
             <g font-size="13" fill="#475467">
-              <circle cx="750" cy="215" r="6.5" fill="#fff" stroke="#98a2b3" stroke-width="1.8"/>
-              <text x="764" y="212" font-weight="600">HiVLA</text>
-              <text class="zh" x="764" y="228" font-size="11.5" fill="#98a2b3">视觉定位 → DiT</text>
-              <text class="en" x="764" y="228" font-size="11.5" fill="#98a2b3">grounding → DiT</text>
+              <circle cx="750" cy="240" r="6.5" fill="#fff" stroke="#98a2b3" stroke-width="1.8"/>
+              <text x="764" y="237" font-weight="600">HiVLA</text>
+              <text class="zh" x="764" y="253" font-size="11.5" fill="#98a2b3">视觉定位 → DiT</text>
+              <text class="en" x="764" y="253" font-size="11.5" fill="#98a2b3">grounding → DiT</text>
             </g>
           </svg>
           <div class="legend">
@@ -569,7 +570,7 @@
             <span><i class="lg-part"></i><span class="zh">代码部分公开</span><span class="en">code partial</span></span>
             <span><i class="lg-none"></i><span class="zh">无公开代码</span><span class="en">no public code</span></span>
             <span><i class="lg-ctx"></i><span class="zh">仅作参照</span><span class="en">context only</span></span>
-            <span><i class="lg-gap"></i><span class="zh">新兴方向</span><span class="en">emerging direction</span></span>
+            <span><i class="lg-gap"></i><span class="zh">缺口 · RoboClaw 目标</span><span class="en">gap · RoboClaw target</span></span>
           </div>
         </figure>
         <p class="caption"><span class="zh">图 1. 基于论文、README 与项目主页（2026-09-11）的定性定位，并非测量值。</span>
@@ -752,7 +753,7 @@
         <div class="section-title">
           <h2><span class="zh"><span class="section-index">03</span>重点项目 Demo 与能力对比</span><span class="en"><span class="section-index">03</span>Deep-dive demos and capability comparison</span></h2>
           <p><span class="zh">这里对比的是 5 个深度拆解样本的公开演示材料。</span>
-            <span class="en">This section compares public demonstration material from the five deep-dive samples; it does not imply that only these projects have demos. The other surveyed projects are not expanded here.</span></p>
+            <span class="en">This section compares public demonstration material from the five deep-dive samples.</span></p>
         </div>
       </div>
 
@@ -889,7 +890,7 @@
               <h4><span class="zh">架构主线</span><span class="en">Architecture in one line</span></h4>
               <p><span class="zh">大脑（RoboBrain）把任务拆成子任务，分发给各机器人的技能库；通过 Redis 共享记忆同步状态。</span>
                 <span class="en">The brain (RoboBrain) splits a task into subtasks and dispatches them to per-robot skill libraries, keeping state in sync through Redis-backed shared memory.</span></p>
-              <h4><span class="zh">适用边界</span><span class="en">Where it stands out</span></h4>
+              <h4><span class="zh">突出之处</span><span class="en">Where it stands out</span></h4>
               <p><span class="zh">本次调研中最清晰的多机调度设计。</span><span class="en">The clearest multi-robot scheduling design reviewed.</span></p>
               <h4><span class="zh">局限</span><span class="en">Limitations</span></h4>
               <p><span class="zh">只有图片，没有视频；ROS、仿真、技能清单均未说明；2025 年 12 月后没有新提交。</span>
@@ -1183,9 +1184,8 @@
           </table>
         </div>
 
-        <p class="reading" style="margin-top:40px"><b><span class="zh">解读：</span><span class="en">Reading:</span></b>
-          <span class="zh">高亮的三行决定一个系统能不能在后端之间切换；表中四个系统没有一个三行全是 ●。</span>
-          <span class="en">the highlighted rows decide whether a system can switch between backends. None of the four systems in the table gets ● on all three.</span></p>
+
+
         <!-- EDIT: capability matrix values -->
         <div class="table-wrap">
           <table class="matrix">
@@ -1229,7 +1229,7 @@
                 <td class="unk"><span class="m">?</span><span class="zh">未说明</span><span class="en">Not documented</span></td></tr>
 
               <tr class="group"><th colspan="5"><span class="zh">执行</span><span class="en">Execution</span></th></tr>
-              <tr><td><span class="zh">ROS 集成</span><span class="en">ROS integration</span></td>
+              <tr class="hl"><td><span class="zh">ROS 集成</span><span class="en">ROS integration</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">ROS 2 指令/状态总线</span><span class="en">ROS 2 command/status bus</span></td>
                 <td class="unk"><span class="m">?</span><span class="zh">未说明</span><span class="en">Not stated</span></td>
                 <td class="unk"><span class="m">?</span><span class="zh">未说明；使用厂商 SDK</span><span class="en">Not stated; vendor SDKs</span></td>
@@ -1244,11 +1244,11 @@
                 <td class="unk"><span class="m">?</span><span class="zh">未说明</span><span class="en">Not stated</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">π0.5、LingBot-VLA、ACT 作为工具</span><span class="en">π0.5, LingBot-VLA, ACT as tools</span></td>
                 <td class="unk"><span class="m">?</span><span class="zh">未说明</span><span class="en">Not documented</span></td></tr>
-              <tr class="hl"><td><span class="zh">策略路由 / 编排</span><span class="en">Policy routing / orchestration</span></td>
-                <td class="partial"><span class="m">◐</span><span class="zh">跨机调度</span><span class="en">Scheduling across robots</span></td>
-                <td class="yes"><span class="m">●</span><span class="zh">多机分发</span><span class="en">Multi-robot dispatch</span></td>
-                <td class="partial"><span class="m">◐</span><span class="zh">隐式，由 LLM 决定</span><span class="en">Implicit, via LLM</span></td>
-                <td class="partial"><span class="m">◐</span><span class="zh">通过 MCP 的多 agent</span><span class="en">Multi-agent via MCP</span></td></tr>
+              <tr class="hl"><td><span class="zh">后端路由（ROS / VLA 选择）</span><span class="en">Backend routing (ROS vs VLA)</span></td>
+                <td class="partial"><span class="m">◐</span><span class="zh">按技能固定绑定</span><span class="en">Fixed per skill</span></td>
+                <td class="no"><span class="m">○</span><span class="zh">只做多机分发，不选后端</span><span class="en">Multi-robot dispatch only</span></td>
+                <td class="partial"><span class="m">◐</span><span class="zh">隐式，由 LLM 在 VLA 间选</span><span class="en">Implicit, LLM picks among VLAs</span></td>
+                <td class="no"><span class="m">○</span><span class="zh">仅确定性技能</span><span class="en">Deterministic skills only</span></td></tr>
               <tr><td><span class="zh">安全 / 恢复</span><span class="en">Safety / recovery</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">重新规划或澄清</span><span class="en">Re-plan or clarify</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">声称</span><span class="en">Claimed</span></td>
@@ -1278,16 +1278,16 @@
     <section id="roboclaw">
       <div class="section-head">
         <div class="section-title">
-          <h2><span class="zh"><span class="section-index">04</span>项目全景</span><span class="en"><span class="section-index">04</span>Project landscape</span></h2>
-          <p><span class="zh">看完前面的项目，缺的东西很集中：还没有系统能按情况在 ROS 和 VLA 之间选一个来用，并在执行后检查选得对不对。下面先讲这个问题，再讲 RoboClaw 怎么做。</span>
-            <span class="en">Across the projects above, the missing piece is consistent: no system yet picks between ROS and VLA based on the situation and then checks whether the choice worked. Below: first the problem, then how RoboClaw approaches it.</span></p>
+          <h2><span class="zh"><span class="section-index">04</span>缺口与 RoboClaw 方案</span><span class="en"><span class="section-index">04</span>The gap and RoboClaw’s approach</span></h2>
+          <p><span class="zh">看完前面的项目，缺的东西很集中：还没有系统能在同一任务中按实时状态在 ROS 和 VLA 之间切换，并在执行后检查切得对不对。下面先讲这个问题，再讲 RoboClaw 怎么做。</span>
+            <span class="en">Across the projects above, the missing piece is consistent: no system yet switches between ROS and VLA within one task based on live state, then checks whether the switch worked. Below: first the problem, then how RoboClaw approaches it.</span></p>
         </div>
       </div>
 
       <div class="content">
         <div class="sub-head" style="margin-top:0"><span class="zh">一 · 问题出在两类后端的衔接上</span><span class="en">1 · The problem is in combining the two backends</span></div>
-        <p class="reading"><span class="zh">把 ROS 和 VLA 包成 Skill 给 LLM 调用，已经有不少项目做到了。两类后端各自擅长什么、在哪会失败，大家也都清楚。麻烦在于<b>检查它们有没有做完、做对，方法完全不同</b>：ROS 可以直接算位姿误差、看关节状态；VLA 没有明确的结束信号，只能靠外部检测器来判断。</span>
-          <span class="en">Plenty of projects already wrap ROS and VLA as skills for an LLM, and what each is good at and where each fails is well understood. The trouble is that <b>checking whether each one finished, and did it right, works completely differently</b>: for ROS you can compute pose error or read joint state; a VLA has no clear end signal, so an external detector has to judge.</span></p>
+        <p class="reading"><span class="zh">把 ROS 和 VLA 包成 Skill 给 LLM 调用，部分项目已经做到了。§02 列的几件难事里，最卡的是验证：<b>检查它们有没有做完、做对，方法完全不同</b>。ROS 可以直接算位姿误差、看关节状态；VLA 没有明确的结束信号，只能靠外部检测器来判断。判断不了 VLA 是否在变差，就不知道什么时候该切换。</span>
+          <span class="en">Some projects already wrap ROS and VLA as skills for an LLM. Of the hard problems listed in §02, verification is the sticking point: <b>checking whether each one finished, and did it right, works completely differently</b>. For ROS you can compute pose error or read joint state; a VLA has no clear end signal, so an external detector has to judge. Without knowing when a VLA is degrading, there is no way to know when to switch.</span></p>
         <div class="gap-box">
           <div class="gap-panel">
             <div class="tag"><span class="zh">A · 确定性</span><span class="en">A · Deterministic</span></div>
@@ -1326,20 +1326,23 @@
           <li><b>Thea</b><span class="how"><span class="zh">隐式</span><span class="en">Implicit</span></span>
             <span><span class="zh">由 LLM 根据工具描述与经验笔记选择策略工具。</span><span class="en">The LLM picks a policy tool from descriptions and experience notes.</span></span></li>
           <li><b>DimOS</b><span class="how"><span class="zh">未涉及</span><span class="en">Not posed</span></span>
-            <span><span class="zh">只有确定性技能。</span><span class="en">Deterministic skills only.</span></span></li>
+            <span><span class="zh">只有确定性技能，没有 VLA 支持。</span><span class="en">Deterministic skills only, no VLA support.</span></span></li>
           <li><b>Hi-VLA Design Study</b><span class="how"><span class="zh">未涉及</span><span class="en">Not posed</span></span>
             <span><span class="zh">只有 VLA，但展示了如何更好地调用 VLA。</span><span class="en">VLA only, though it shows how to call VLAs well.</span></span></li>
         </ul>
 
         <div class="question">
           <div class="lbl"><span class="zh">需要回答的问题</span><span class="en">The question to answer</span></div>
-          <p><span class="zh">Agent 怎样在 ROS 和 VLA 之间选对执行方式、在任务中途切换，同时盯住执行过程，出错能恢复，并随时更新对环境的认识？</span>
+          <p><span class="zh">Agent 怎样在 ROS 和 VLA 之间选对执行方式、在任务中途切换，出错能恢复，并随时更新对环境的认识？</span>
             <span class="en">How can an agent pick the right one of ROS and VLA, switch between them mid-task, keep watch on execution, recover from errors, and keep its picture of the environment up to date?</span></p>
         </div>
 
-        <div class="sub-head"><span class="zh">三 · RoboClaw 怎么做</span><span class="en">3 · What RoboClaw does</span></div>
+        <div class="sub-head"><span class="zh">三 · RoboClaw</span><span class="en">3 · What RoboClaw does</span></div>
         <p class="reading"><span class="zh">RoboClaw 不把“用哪个后端”交给 LLM 在 Prompt 里顺手决定，而是在 Runtime 里单独做这一步：每次选择都记下依据，事后可以回放；决定时参考当前的世界状态，执行完再用验证结果检查选得对不对。我们想做的是一个能长时间跑任务的机器人 Runtime：记得住环境、选得对执行方式、查得了结果，并且从过去的执行里越做越稳。</span>
           <span class="en">RoboClaw doesn’t leave “which backend” for the LLM to settle inside a prompt. The runtime makes that decision as a separate step: each choice is logged with its reasons and can be replayed; it looks at the current world state to decide, and uses the verification result afterwards to check the choice. What we want is a robot runtime that can run long tasks: remember its surroundings, pick the right way to execute, check the results, and get more reliable from past runs.</span></p>
+        <div class="takeaway">
+          <span class="zh"><strong>RoboClaw 的特点：主动切换。</strong>ROS 和 VLA 不只是二选一。例如 VLA 因环境干扰（光照、遮挡、物体偏离常见位置）表现下降时，Runtime 先切到 ROS 调整机器人位姿、相机视角或物体摆放，让任务回到 VLA 熟悉的训练条件，再交还给 VLA 继续执行。</span>
+          <span class="en"><strong>What sets RoboClaw apart: active switching.</strong> ROS and VLA are not just alternatives. When a VLA degrades under environmental noise (lighting, occlusion, an object away from its usual pose), the runtime switches to ROS to adjust the robot’s pose, the camera viewpoint or the object’s placement, bringing the task back to the VLA’s training conditions, then hands control back to the VLA.</span></div>
       </div>
 
       <div class="content wide">
@@ -1348,7 +1351,7 @@
           <div class="direction-grid">
             <article class="direction"><div class="n">01</div><h3><span class="zh">理解世界</span><span class="en">Understand</span></h3><p><span class="zh">时间记忆、3D 空间记忆、对象与机器人状态形成统一 World State。</span><span class="en">Temporal memory, 3D spatial memory, objects and robot state form one world state.</span></p></article>
             <article class="direction"><div class="n">02</div><h3><span class="zh">组织任务</span><span class="en">Organize</span></h3><p><span class="zh">Context Builder 控制上下文；Skill Graph 表达依赖、分支、并行和资源约束。</span><span class="en">A context builder manages attention while skill graphs express dependencies, branches, parallelism and resources.</span></p></article>
-            <article class="direction"><div class="n">03</div><h3><span class="zh">选择执行</span><span class="en">Choose</span></h3><p><span class="zh">根据几何、接触、风险和历史表现，在确定性 ROS 技能与 VLA 策略之间路由。</span><span class="en">Route between deterministic ROS skills and VLA policies from geometry, contact, risk and prior performance.</span></p></article>
+            <article class="direction"><div class="n">03</div><h3><span class="zh">选择与切换</span><span class="en">Choose &amp; switch</span></h3><p><span class="zh">按几何、接触、风险和历史表现选后端；执行中按实时状态切换，必要时用 ROS 为 VLA 恢复熟悉的条件。</span><span class="en">Pick the backend from geometry, contact, risk and track record; switch mid-task on live state, using ROS to restore conditions the VLA knows.</span></p></article>
             <article class="direction"><div class="n">04</div><h3><span class="zh">验证与恢复</span><span class="en">Verify</span></h3><p><span class="zh">动作完成由证据判断；失败后重试、重观察、重规划、切换后端或请求协助。</span><span class="en">Evidence decides completion; failures trigger retry, re-observation, replanning, backend switching or assistance.</span></p></article>
             <article class="direction"><div class="n">05</div><h3><span class="zh">积累与演化</span><span class="en">Evolve</span></h3><p><span class="zh">从执行记录提取 Skill Experience，生成候选技能，经评测后再替换旧版本。</span><span class="en">Extract skill experience from traces, propose candidates and promote them only after evaluation.</span></p></article>
           </div>
@@ -1495,6 +1498,8 @@
             <a href="https://github.com/nasa-jpl/rosa" target="_blank" rel="noopener">GitHub ★1.6k</a></div></li>
           <li><div><span class="t">RAI: vendor-agnostic agentic framework for ROS 2 robotics</span> <span class="w">· Robotec.ai</span><br>
             <a href="https://github.com/RobotecAI/rai" target="_blank" rel="noopener">GitHub ★588</a></div></li>
+          <li><div><span class="t">OpenMind OM1: cross-robot agent runtime and hardware abstraction layer</span> <span class="w">· OpenMind</span><br>
+            <a href="https://github.com/OpenMind/OM1" target="_blank" rel="noopener">GitHub ★2.9k</a></div></li>
           <li><div><span class="t"><span class="zh">记忆方向延伸阅读</span><span class="en">Memory-side reading</span></span>
             <span class="w"><span class="zh">· When Memory Lies、KARMA、Zep/Graphiti、MemoryVLA 等，见仓库中的 <code>memory_research.md</code></span>
               <span class="en">· When Memory Lies, KARMA, Zep/Graphiti, MemoryVLA and more. See <code>memory_research.md</code> in this repo</span></span></div></li>
