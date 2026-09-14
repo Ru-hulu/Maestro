@@ -6,6 +6,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
 find_package(gazebo_dev REQUIRED)
 find_package(gazebo_ros REQUIRED)
 find_package(geometry_msgs REQUIRED)
@@ -28,6 +29,13 @@ ament_target_dependencies(openarm2_rigid_cmd_vel_plugin
 
 install(TARGETS openarm2_rigid_cmd_vel_plugin
   LIBRARY DESTINATION lib
+)
+
+ament_python_install_package(${PROJECT_NAME})
+
+install(PROGRAMS
+  scripts/dump_robot_description.py
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 install(DIRECTORY
