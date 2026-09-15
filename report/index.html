@@ -14,7 +14,7 @@
     GitHub stars, links, table values, gap statements, architecture.
 
   SECTIONS (source order == render order):
-    #overview 01 · #landscape 02 (scatter + the 21-project summary table)
+    #overview 01 · #landscape 02 (scatter + the 20-project summary table)
     #coverage 03 (deep-dive demos + capability matrices) · #roboclaw 04 (bottleneck -> our project)
     #harness  (hidden) architecture detail behind §04 · #refs 05
 
@@ -22,7 +22,7 @@
   .borrow, add a column to both matrices in #coverage, and add a row to .compare in #landscape.
   Demo clips: <button data-kind="video|image|youtube|bilibili" data-src="..." data-caption-zh="..." data-caption-en="..." data-origin="...">
 
-  Table cells: class yes ● documented & shown · partial ◐ partial/claimed · no ○ explicitly absent · unk ? not found
+  Table cells: class yes ● documented or shown · partial ◐ partial, claimed, fixed or implicit · no ○ absent or out of scope · unk ? not found or not verified
   All facts were checked against papers / READMEs / project pages on 11 Sep 2026.
 -->
 <html lang="zh-CN" data-lang="zh">
@@ -145,7 +145,7 @@
     .glance .take { display: block; margin-top: 3px; color: var(--text-2); font-size: 13.5px; line-height: 1.5; }
     .sm { display: block; color: var(--muted); font-size: 12.5px; font-weight: 400; line-height: 1.45; margin-top: 3px; }
 
-    .matrix { min-width: 820px; font-size: 13.5px; table-layout: fixed; }
+    .matrix { min-width: 960px; font-size: 13.5px; table-layout: fixed; }
     .matrix col.c0 { width: 210px; }
     .matrix thead th a { color: var(--text); }
     .matrix td:first-child, .matrix th:first-child { position: sticky; left: 0; z-index: 1; background: #fff; font-weight: 600; color: var(--text); }
@@ -194,7 +194,7 @@
     .lg-gap  { border: 1.5px dashed var(--accent); border-radius: 3px !important; width: 16px !important; }
 
     /* ---------- borrow strip ---------- */
-    .borrow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 20px; }
+    .borrow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 20px; }
     .borrow a { background: #fff; padding: 14px 16px; color: var(--text-2); font-size: 13.5px; line-height: 1.5; }
     .borrow a:hover { background: var(--accent-soft); text-decoration: none; }
     .borrow b { display: block; color: var(--text); font-size: 14px; margin-bottom: 4px; }
@@ -243,10 +243,12 @@
     .direction h3 { font-size: 17px; margin: 18px 0 8px; }
     .direction p { color: var(--text-2); font-size: 13.5px; margin: 0; }
     .roboclaw-vision { margin-top: 28px; }
-    .vision-loop { margin-top: 26px; padding: 18px 22px; border-left: 3px solid var(--accent); background: var(--accent-soft); font-weight: 650; }
-    .landscape-thesis { margin: 0 0 28px; padding: 22px 26px; border: 1px solid #cbdceb; border-left: 4px solid var(--accent); background: var(--accent-soft); }
-    .landscape-thesis .eyebrow { display: block; margin-bottom: 7px; color: var(--accent); font-size: 11.5px; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; }
-    .landscape-thesis p { margin: 0; color: var(--text); font-size: clamp(17px, 2vw, 21px); line-height: 1.6; font-weight: 620; text-wrap: balance; }
+    .keypoint { margin-top: 24px; padding: 22px 26px; border: 1px solid #cbdceb; border-left: 4px solid var(--accent); background: var(--accent-soft); }
+    .keypoint .eyebrow { display: block; margin-bottom: 7px; font-size: 11.5px; font-weight: 750; letter-spacing: .13em; }
+    .keypoint .lead { margin: 0 0 16px; color: var(--text); font-size: clamp(17px, 2vw, 20px); line-height: 1.6; font-weight: 620; text-wrap: balance; }
+    .keypoint dl { margin: 0; display: grid; grid-template-columns: 96px 1fr; gap: 10px 14px; font-size: 14.5px; }
+    .keypoint dt { color: var(--accent); font-weight: 700; }
+    .keypoint dd { margin: 0; color: var(--text-2); }
 
     .notes h4 { margin: 0 0 3px; font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); }
     .notes p { margin: 0 0 16px; color: var(--text-2); font-size: 14.5px; }
@@ -303,9 +305,6 @@
     .req { background: #fff; padding: 14px 18px; font-size: 14.5px; color: var(--text); }
     .req b { color: var(--accent); margin-right: 6px; }
     .req .from { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
-    .principles-lead { margin: 22px 0 10px; }
-    .reqs.principles .req b { display: block; margin: 0 0 4px; }
-    .reqs.principles .req:last-child:nth-child(odd) { grid-column: 1 / -1; }
 
     .signals { min-width: 640px; }
     .signals td:first-child { font-weight: 600; color: var(--text); width: 20%; }
@@ -332,7 +331,7 @@
     @media (max-width: 760px) {
       :root { --pad-x: 20px; }
       .brand { display: none; }
-      .summary-grid, .gap-box, .branch, .reqs, .borrow, .terms, .direction-grid { grid-template-columns: 1fr; }
+      .summary-grid, .gap-box, .branch, .reqs, .borrow, .terms, .direction-grid, .keypoint dl { grid-template-columns: 1fr; }
       .project-head { flex-direction: column; align-items: flex-start; }
       .chips { justify-content: flex-start; }
       .today li { grid-template-columns: 1fr; gap: 0; }
@@ -368,8 +367,8 @@
       <div class="eyebrow"><span class="zh">文献与项目调研 · 2026 年 9 月</span><span class="en">Literature &amp; project review · September 2026</span></div>
       <h1><span class="zh">机器人 Agent Harness：现状与缺口</span><span class="en">Robot Agent Harnesses: Where the Field Stands</span></h1>
       <p class="thesis">
-        <span class="zh">现在的机器人 Agent 大多支持调用 ROS 技能或 VLA 策略，但两类都接、还能根据实时的环境和任务状态决定用哪个的项目很少。</span>
-        <span class="en">Most robot agents today can call either ROS skills or VLA policies. Very few connect both and decide which one to use from the live environment and task state.</span>
+        <span class="zh">现有机器人 Agent 大多只接入确定性 ROS 技能或学习型 VLA 策略中的一类；同时接入两类后端，并能依据实时环境与任务状态在二者之间选择的系统仍属少数。</span>
+        <span class="en">Most robot agents integrate only one of two backends: deterministic ROS skills or learned VLA policies. Few integrate both and choose between them according to the live environment and task state.</span>
       </p>
       <div class="meta">
 
@@ -378,7 +377,7 @@
       </div>
       <dl class="scope">
         <dt><span class="zh">重点调研</span><span class="en">Reviewed</span></dt>
-        <dd><span class="zh">深度拆解 HoloAgent-0、RoboOS、Thea、DimOS 与 Hi-VLA Design Study</span><span class="en">Deep dives into HoloAgent-0, RoboOS, Thea, DimOS and the Hi-VLA Design Study</span></dd>
+        <dd><span class="zh">深度拆解 HoloAgent-0、RoboOS、Thea、DimOS、Harness VLA 与 Hi-VLA Design Study</span><span class="en">Deep dives into HoloAgent-0, RoboOS, Thea, DimOS, Harness VLA and the Hi-VLA Design Study</span></dd>
         <dt><span class="zh">背景参照</span><span class="en">Context</span></dt>
         <dd><span class="zh">以 LLM 决策为共同前提，分别比较 ROS / Controller 与 VLA 接入，并调查上下文、记忆和验证恢复能力</span><span class="en">Assumes LLM decision-making, compares ROS / controller and VLA integration independently, and examines context, memory, verification and recovery</span></dd>
       </dl>
@@ -398,34 +397,35 @@
           <article class="summary-item">
             <div class="index">01</div>
             <h3><span class="zh">Agent loop 已成为常见结构</span><span class="en">Agent loops are now common</span></h3>
-            <p><span class="zh">深度样本都把机器人能力封装成 skill，由 LLM 循环调用。区别主要在动作单元：skill graph、子任务、单次 tool call、MCP skill。</span>
+            <p><span class="zh">深度样本都把机器人能力封装成 skill，由 LLM 循环调用。区别主要在动作单元：skill graph、子任务、单次 tool call、MCP skill，以及解析式原语与 VLA 原语。</span>
               <span class="en">The deep-dive systems wrap robot capabilities as skills under an LLM loop. The unit of action differs:
-              a skill graph, a subtask, a single tool call, or an MCP skill.</span></p>
+              a skill graph, a subtask, a single tool call, an MCP skill, or an analytic or VLA primitive.</span></p>
           </article>
           <article class="summary-item">
             <div class="index">02</div>
             <h3><span class="zh">记忆是主要差异点</span><span class="en">Memory is the differentiator</span></h3>
-            <p><span class="zh">3D 场景图（HoloAgent-0）、带位姿的观测（DimOS）、场景摘要 + 工具经验（Thea）、多机共享记忆（RoboOS）。</span>
+            <p><span class="zh">3D 场景图（HoloAgent-0）、带位姿的观测（DimOS）、场景摘要 + 工具经验（Thea）、多机共享记忆（RoboOS）、从执行记录提炼的任务与全局记忆（Harness VLA）。</span>
               <span class="en">3D scene graphs (HoloAgent-0), pose-stamped observations (DimOS), a scene brief with tool experience (Thea),
-              and memory shared across robots (RoboOS).</span></p>
+              memory shared across robots (RoboOS), and task and global memory distilled from execution traces (Harness VLA).</span></p>
           </article>
           <article class="summary-item key">
             <div class="index">03 · <span class="zh">缺口</span><span class="en">the gap</span></div>
-            <h3><span class="zh">能在 ROS 和 VLA 之间切换的很少</span><span class="en">Few can switch between ROS and VLA</span></h3>
-            <p><span class="zh">深拆样本里，HoloAgent-0 有 ROS 也有学习模型，但每个技能绑死一个后端；Thea 能在几个 VLA 之间挑，但不涉及 ROS；RoboOS 论文称两类工具都有、由 Agent 选择，但开源代码中未核实。在同一任务中按实时环境和执行状态切换两者的，目前还没有成熟的公开实现。</span>
-              <span class="en">Among the deep dives, HoloAgent-0 has ROS and learned models but binds each skill to one backend; Thea picks among several VLAs but has no ROS side; the RoboOS paper claims both kinds of tools with agent choice, not verified in the open code. No public implementation yet switches between the two within one task based on live environment and execution state.</span></p>
+            <h3><span class="zh">能在 ROS 与 VLA 之间切换的系统仍属少数</span><span class="en">Few systems can switch between ROS and VLA</span></h3>
+            <p><span class="zh">在深入分析的样本中，HoloAgent-0 兼有 ROS 与学习模型，但每类技能在设计时绑定单一后端；Thea 可在多个 VLA 之间选择，但不含 ROS 后端；RoboOS 论文称技能库兼含两类工具并由 Agent 选择，但开源代码中未能核实。目前尚无公开实现能在真实机器人上由 Runtime 依据实时状态显式地在二者之间切换；最接近的 RPent 真机扩展（2026-09）仍由 LLM 按提示规则调度。RoboClaw 以<a href="#active-switching">主动切换</a>为切入点（§04）。</span>
+              <span class="en">Among the deep dives, HoloAgent-0 has both ROS and learned models but binds each skill type to a single backend at design time; Thea selects among several VLAs but has no ROS backend; the RoboOS paper states that its skill library holds both kinds of tools, chosen by the agent, which could not be verified in the open code. No public implementation yet has a runtime switch explicitly between the two on a real robot from live state; the closest, RPent’s real-robot extension (Sep 2026), still leaves the choice to LLM prompt rules. RoboClaw takes <a href="#active-switching">active switching</a> as its entry point (§04).</span></p>
           </article>
         </div>
 
 
-        <!-- EDIT: one row per deep-dive sample. Stars from api.github.com, 11 Sep 2026.
-             Keep the "what to borrow" column in sync with the .borrow nav in §03. -->
+        <!-- EDIT: one row per open-source system, sorted by GitHub stars (api.github.com, 11 Sep 2026; Harness VLA 15 Sep).
+             Projects without public code (e.g. the Hi-VLA Design Study) stay out; they can still get a §03 card.
+             For deep-dive rows, keep the "what to borrow" column in sync with the .borrow nav in §03. -->
         <div class="table-wrap">
           <table class="glance">
             <colgroup><col class="c0"><col></colgroup>
             <thead>
               <tr>
-                <th><span class="zh">系统</span><span class="en">System</span></th>
+                <th><span class="zh">Github高星系统</span><span class="en">System</span></th>
                 <th><span class="zh">核心思路 · 最值得借鉴的一点</span><span class="en">Core idea · the one thing to borrow</span></th>
               </tr>
             </thead>
@@ -455,6 +455,12 @@
                   <span class="take"><span class="zh">借鉴：一小套正交、高复用、参数化的 Skill（navigate / grasp / place）通过 MCP 在多种机型上复用，由大脑负责组合</span><span class="en">Borrow: a small set of orthogonal, reusable, parameterized skills (navigate / grasp / place), reused across robot models via MCP and composed by the brain</span></span></td>
               </tr>
               <tr>
+                <td><a href="#p-harness">Harness VLA</a>
+                  <span class="sm"><span class="zh">清华大学等 · 2026.07 · RPent ★535</span><span class="en">Tsinghua University et al. · Jul 2026 · RPent ★535</span></span></td>
+                <td><span class="idea"><span class="zh">冻结 VLA + 解析式原语，由规划器重新摆位</span><span class="en">Frozen VLA + analytic primitives, re-staged by the planner</span></span>
+                  <span class="take"><span class="zh">借鉴：接触密集阶段交给 VLA，其余由确定性原语完成；VLA 失败后先重新摆位再重试</span><span class="en">Borrow: leave contact-rich phases to the VLA and everything else to deterministic primitives; after a VLA failure, re-stage before retrying</span></span></td>
+              </tr>
+              <tr>
                 <td><a href="#p-holoagent">HoloAgent-0</a>
                   <span class="sm"><span class="zh">地平线 · 2026.06 · ★371</span><span class="en">Horizon Robotics · Jun 2026 · ★371</span></span></td>
                 <td><span class="idea"><span class="zh">Skill graph + 3D 空间记忆</span><span class="en">Skill graph + 3D spatial memory</span></span>
@@ -465,12 +471,6 @@
                   <span class="sm"><span class="zh">宁波东方理工 · 2026.08 · ★109</span><span class="en">EIT Ningbo · Aug 2026 · ★109</span></span></td>
                 <td><span class="idea"><span class="zh">VLA 即工具 + 动作评估器</span><span class="en">VLAs as tools + action evaluator</span></span>
                   <span class="take"><span class="zh">借鉴：动作完成由评估器给证据，像退出码一样返回给 Agent</span><span class="en">Borrow: Let an evaluator supply the evidence of completion and return it like an exit code</span></span></td>
-              </tr>
-              <tr>
-                <td><a href="#p-hivla">Hi-VLA Design Study</a>
-                  <span class="sm"><span class="zh">Google DeepMind · 2026.06 · 无公开代码</span><span class="en">Google DeepMind · Jun 2026 · no public code</span></span></td>
-                <td><span class="idea"><span class="zh">VLM 规划器 + VLA 控制器消融</span><span class="en">VLM planner + VLA controller ablations</span></span>
-                  <span class="take"><span class="zh">借鉴：用成功检测决定 VLA 何时停，而不是让它跑满时长</span><span class="en">Borrow: End a VLA call on success detection instead of letting it run out the clock</span></span></td>
               </tr>
             </tbody>
           </table>
@@ -483,17 +483,12 @@
       <div class="section-head">
         <div class="section-title">
           <h2><span class="section-index">02</span>Landscape</h2>
-          <p><span class="zh">横轴：动作主要靠确定性的 ROS 技能，还是学习型的 VLA 策略来执行。纵轴：Agent Runtime 深度，也就是 harness 在状态获取、记忆、验证、诊断和恢复上做了多少。大多数项目只在一头做得深，两类后端都接、闭环也做全的很少。</span>
-            <span class="en">Horizontal axis: whether actions run mainly on deterministic ROS skills or learned VLA policies. Vertical axis: agent runtime depth, i.e. how much the harness does for state access, memory, verification, diagnosis and recovery. Most projects go deep on one end; few connect both backends and close the loop.</span></p>
+          <p><span class="zh">横轴表示动作执行主要依赖确定性的 ROS 技能还是学习型的 VLA 策略；纵轴表示 Agent Runtime（harness）的深度，即系统在状态获取、记忆、验证、诊断与恢复方面的完备程度。多数系统仅在单侧达到较高深度，兼具两类后端且形成完整闭环的系统仍属少数。</span>
+            <span class="en">The horizontal axis shows whether actions are executed mainly by deterministic ROS skills or by learned VLA policies; the vertical axis shows the depth of the agent runtime (harness), i.e. how fully a system covers state access, memory, verification, diagnosis and recovery. Most systems reach depth on one side only; few combine both backends with a complete closed loop.</span></p>
         </div>
       </div>
 
       <div class="content wide">
-        <div class="landscape-thesis">
-          <span class="eyebrow"><span class="zh">本次调研的核心判断</span><span class="en">Central finding</span></span>
-          <p><span class="zh">把 ROS 和 VLA 都包成 Skill 给 LLM 调用，部分项目已经能够做到。当前缺口主要集中在什么时候用哪个、两者怎么交接、执行中怎么盯、失败了怎么恢复、状态怎么获取和更新，以及怎么根据以往的执行结果调整选择。</span>
-            <span class="en">Some projects can already wrap both ROS and VLA as skills an LLM can call. The gap lies in what comes next: when to use which, how to hand over between them, how to watch execution, how to recover from failure, how to obtain and update state, and how to adjust choices based on past runs.</span></p>
-        </div>
         <!-- EDIT: landscape figure. Move a point by editing its cx/cy and its label x/y (both zh and en <text>).
              Plot area: x 110→860 (deterministic → learned), y 420→40 (shallow → deep agent runtime / harness). -->
         <figure class="figure">
@@ -528,11 +523,11 @@
             </g>
 
             <!-- gap / RoboClaw target area -->
-            <ellipse cx="600" cy="66" rx="150" ry="28" fill="#eef3f8" stroke="#1f4e79" stroke-width="1.2" stroke-dasharray="5 4"/>
-            <text class="zh" x="600" y="62" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1f4e79">缺口：按实时状态切换 ROS ↔ VLA</text>
-            <text class="en" x="600" y="62" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1f4e79">Gap: switch ROS ↔ VLA on live state</text>
-            <text class="zh" x="600" y="78" text-anchor="middle" font-size="11.5" fill="#1f4e79">RoboClaw 的目标位置（§04）</text>
-            <text class="en" x="600" y="78" text-anchor="middle" font-size="11.5" fill="#1f4e79">RoboClaw’s target (§04)</text>
+            <ellipse cx="485" cy="56" rx="150" ry="28" fill="#eef3f8" stroke="#1f4e79" stroke-width="1.2" stroke-dasharray="5 4"/>
+            <text class="zh" x="485" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1f4e79">缺口：显式、按状态切换 ROS ↔ VLA</text>
+            <text class="en" x="485" y="52" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1f4e79">Gap: explicit ROS ↔ VLA switching</text>
+            <text class="zh" x="485" y="68" text-anchor="middle" font-size="11.5" fill="#1f4e79">RoboClaw 的目标位置（§04）</text>
+            <text class="en" x="485" y="68" text-anchor="middle" font-size="11.5" fill="#1f4e79">RoboClaw’s target (§04)</text>
 
             <!-- context systems -->
             <g font-size="13" fill="#475467">
@@ -573,11 +568,11 @@
               <text class="zh" x="766" y="331" text-anchor="end" font-size="11.5" fill="#667085">VLM → VLA 分层研究</text>
               <text class="en" x="766" y="331" text-anchor="end" font-size="11.5" fill="#667085">VLM → VLA hierarchy study</text>
             </g>
-            <g font-size="13" fill="#475467">
-              <circle cx="750" cy="240" r="6.5" fill="#fff" stroke="#98a2b3" stroke-width="1.8"/>
-              <text x="764" y="237" font-weight="600">HiVLA</text>
-              <text class="zh" x="764" y="253" font-size="11.5" fill="#98a2b3">视觉定位 → DiT</text>
-              <text class="en" x="764" y="253" font-size="11.5" fill="#98a2b3">grounding → DiT</text>
+            <g font-size="14" fill="#1f2933">
+              <circle cx="600" cy="160" r="8" fill="#1f4e79"/>
+              <text x="614" y="157" font-weight="700">Harness VLA</text>
+              <text class="zh" x="614" y="173" font-size="11.5" fill="#667085">解析式原语 + 冻结 VLA</text>
+              <text class="en" x="614" y="173" font-size="11.5" fill="#667085">analytic primitives + frozen VLA</text>
             </g>
           </svg>
           <div class="legend">
@@ -596,24 +591,25 @@
           <div class="term"><b><span class="zh">Harness 层 · Agent Runtime</span><span class="en">Harness layer · agent runtime</span></b><span class="zh">介于 LLM 与执行后端之间：状态查询工具、记忆、执行监控、验证、诊断与恢复。图 1 纵轴衡量的就是这一层的深度。</span><span class="en">Sits between the LLM and the backends: state-query tools, memory, execution monitoring, verification, diagnosis and recovery. Figure 1’s vertical axis measures how deep this layer goes.</span></div>
           <div class="term"><b><span class="zh">执行层 · Skill Runtime（ROS / VLA）</span><span class="en">Execution layer · skill runtime (ROS / VLA)</span></b><span class="zh">ROS 技能偏确定性控制；VLA 偏学习型策略。</span><span class="en">ROS skills provide deterministic control; VLAs provide learned policies.</span></div>
         </div>
-        <!-- EDIT: 21-project summary table, hidden for now. Remove `hidden` to show it again. -->
+        <!-- EDIT: 20-project summary table, hidden for now. Remove `hidden` to show it again. -->
         <div class="project-catalog" hidden>
         <p class="reading"><b><span class="zh">共同前提：</span><span class="en">Shared premise:</span></b><span class="zh">这些项目都让 LLM 参与理解、规划或工具选择。以下按照每个项目最突出的特征分类。</span><span class="en">All of these projects use an LLM for interpretation, planning or tool selection. They are grouped below by each project's most prominent characteristic.</span></p>
-        <div class="sub-head" style="margin-top:0"><span class="zh">21 个项目 · 一张总表</span><span class="en">21 projects · one summary table</span></div>
+        <div class="sub-head" style="margin-top:0"><span class="zh">20 个项目 · 一张总表</span><span class="en">20 projects · one summary table</span></div>
         <div class="key-row">
-          <span class="yes"><span class="m">●</span><span class="zh">有文档且明确具备</span><span class="en">documented and explicit</span></span>
-          <span class="partial"><span class="m">◐</span><span class="zh">部分具备，或固定 / 隐式</span><span class="en">partial, or fixed / implicit</span></span>
-          <span class="no"><span class="m">○</span><span class="zh">明确不涉及</span><span class="en">explicitly not addressed</span></span>
-          <span class="unk"><span class="m">?</span><span class="zh">本次调研未核实</span><span class="en">not verified in this survey</span></span>
+          <span class="yes"><span class="m">●</span><span class="zh">有文档或 Demo 为证</span><span class="en">documented or shown</span></span>
+          <span class="partial"><span class="m">◐</span><span class="zh">部分具备、仅声称，或固定 / 隐式</span><span class="en">partial, claimed only, or fixed / implicit</span></span>
+          <span class="no"><span class="m">○</span><span class="zh">不具备或不涉及</span><span class="en">absent or out of scope</span></span>
+          <span class="unk"><span class="m">?</span><span class="zh">资料中未找到或未核实</span><span class="en">not found or not verified</span></span>
         </div>
-        <!-- EDIT: one row per project. Symbols follow the key above: ● documented, ◐ partial/fixed,
-             ○ explicitly not addressed, ? not verified in this survey. Keep the tfoot counts in sync. -->
+        <!-- EDIT: one row per project. Symbols follow the key above (same key as §03): ● documented or shown,
+             ◐ partial / claimed / fixed / implicit, ○ absent or out of scope, ? not found or not verified.
+             Every project must use an LLM (shared premise). Keep the tfoot counts in sync. -->
         <div class="table-wrap">
           <table class="matrix compare">
             <colgroup><col class="c0"><col><col><col><col class="c4"></colgroup>
             <thead>
               <tr>
-                <th><span class="zh">项目 · 共 21 个</span><span class="en">Project · 21 in total</span></th>
+                <th><span class="zh">项目 · 共 20 个</span><span class="en">Project · 20 in total</span></th>
                 <th><span class="zh">世界状态 / 记忆</span><span class="en">World state / memory</span></th>
                 <th><span class="zh">执行验证 / 恢复</span><span class="en">Verification / recovery</span></th>
                 <th class="gapcol"><span class="zh">ROS ↔ VLA 动态路由</span><span class="en">ROS ↔ VLA dynamic routing</span></th>
@@ -690,32 +686,27 @@
               </tr>
 
               <tr class="group"><th colspan="5">
-                <span class="zh">C · LLM → ROS 经典控制 + VLA<em>5 个 · 两类后端共存，是否动态路由仍需逐项目判断</em></span>
-                <span class="en">C · LLM → classical control + VLA<em>5 · both backends coexist; dynamic routing varies by project</em></span></th></tr>
+                <span class="zh">C · LLM → ROS 经典控制 + VLA<em>4 个 · 两类后端共存，是否动态路由仍需逐项目判断</em></span>
+                <span class="en">C · LLM → classical control + VLA<em>4 · both backends coexist; dynamic routing varies by project</em></span></th></tr>
               <tr class="hl">
                 <td><a href="#p-holoagent">HoloAgent-0</a><span class="sm"><span class="zh">ROS 2 为主；学习模型按 Skill 固定绑定</span><span class="en">ROS 2-led; learned models fixed to skills</span></span></td>
                 <td class="yes"><span class="m">●</span></td><td class="partial"><span class="m">◐</span></td><td class="partial"><span class="m">◐</span></td>
                 <td class="code">★ 371</td>
               </tr>
-              <tr>
-                <td>RPent / Harness-VLA<span class="sm"><span class="zh">解析式 primitive + 冻结 VLA</span><span class="en">Analytic primitives + frozen VLAs</span></span></td>
-                <td class="unk"><span class="m">?</span></td><td class="unk"><span class="m">?</span></td><td class="partial"><span class="m">◐</span></td>
-                <td class="code unk"><span class="zh">未核实</span><span class="en">not verified</span></td>
+              <tr class="hl">
+                <td><a href="#p-harness">Harness VLA (RPent)</a><span class="sm"><span class="zh">解析式原语 + 冻结 VLA；仿真评测，另有双臂 Franka 真机扩展</span><span class="en">Analytic primitives + frozen VLAs; evaluated in simulation, plus a dual-Franka real-robot extension</span></span></td>
+                <td class="partial"><span class="m">◐</span></td><td class="yes"><span class="m">●</span></td><td class="partial"><span class="m">◐</span></td>
+                <td class="code">★ 535</td>
               </tr>
               <tr>
-                <td>OpenRAL<span class="sm"><span class="zh">Nav2、MoveIt、ros2_control 与 VLA 统一为 rSkill</span><span class="en">Nav2, MoveIt, ros2_control and VLAs as rSkills</span></span></td>
+                <td><a href="https://github.com/OpenRAL/openral" target="_blank" rel="noopener">OpenRAL</a><span class="sm"><span class="zh">Nav2、MoveIt、ros2_control 与 VLA 统一为 rSkill，由 LLM 选择</span><span class="en">Nav2, MoveIt, ros2_control and VLAs as rSkills, chosen by an LLM</span></span></td>
                 <td class="unk"><span class="m">?</span></td><td class="partial"><span class="m">◐</span></td><td class="partial"><span class="m">◐</span></td>
-                <td class="code unk"><span class="zh">未核实</span><span class="en">not verified</span></td>
+                <td class="code">★ 44</td>
               </tr>
               <tr>
-                <td>RoboNeuron<span class="sm"><span class="zh">ROS、运动学控制与 VLA 共存</span><span class="en">ROS, kinematic control and VLA in one runtime</span></span></td>
+                <td><a href="https://github.com/guanweifan/RoboNeuron" target="_blank" rel="noopener">RoboNeuron</a><span class="sm"><span class="zh">连接 MCP 与 ROS 2 的中间件，ROS 与 VLA 共存</span><span class="en">MCP-to-ROS 2 middleware; ROS and VLA in one runtime</span></span></td>
                 <td class="unk"><span class="m">?</span></td><td class="unk"><span class="m">?</span></td><td class="partial"><span class="m">◐</span></td>
-                <td class="code unk"><span class="zh">未核实</span><span class="en">not verified</span></td>
-              </tr>
-              <tr>
-                <td>Cyclo Intelligence<span class="sm"><span class="zh">真机长程流程交替使用两类控制</span><span class="en">Alternates both control types in long real-robot tasks</span></span></td>
-                <td class="unk"><span class="m">?</span></td><td class="unk"><span class="m">?</span></td><td class="partial"><span class="m">◐</span></td>
-                <td class="code"><span class="zh">无</span><span class="en">none</span></td>
+                <td class="code">★ 46</td>
               </tr>
 
               <tr class="group"><th colspan="5">
@@ -744,17 +735,17 @@
             </tbody>
             <tfoot>
               <tr>
-                <td><span class="zh">21 个项目合计</span><span class="en">Across all 21</span></td>
-                <td><b>●</b> 4 · <b>◐</b> 6 · <b>○</b> 5 · <b>?</b> 6</td>
-                <td><b>●</b> 2 · <b>◐</b> 10 · <b>○</b> 3 · <b>?</b> 6</td>
-                <td class="gapcol"><b class="zero">● 0</b> · <b>◐</b> 7 · <b>○</b> 12 · <b>?</b> 2</td>
+                <td><span class="zh">20 个项目合计</span><span class="en">Across all 20</span></td>
+                <td><b>●</b> 4 · <b>◐</b> 7 · <b>○</b> 5 · <b>?</b> 4</td>
+                <td><b>●</b> 3 · <b>◐</b> 10 · <b>○</b> 3 · <b>?</b> 4</td>
+                <td class="gapcol"><b class="zero">● 0</b> · <b>◐</b> 6 · <b>○</b> 12 · <b>?</b> 2</td>
                 <td></td>
               </tr>
             </tfoot>
           </table>
         </div>
-        <div class="route-note"><i></i><span><span class="zh"><b>怎么读这张表：</b>最右侧的「动态路由」一列没有任何一个 ●——C 组的 5 个项目让两类后端共存，但选择是设计时固定或由 LLM 隐式决定（◐）；Thea、RoboOS 由 LLM 在工具间隐式选择（◐）；其余项目只有单一后端或未核实（○ / ?）。浅蓝色行是 5 个深拆样本，在 §03 逐项展开。</span>
-          <span class="en"><b>How to read it:</b> the rightmost “dynamic routing” column contains no ● at all. The five projects in group C do run both backends, but the choice is fixed at design time or made implicitly by the LLM (◐); Thea and RoboOS let the LLM choose among tools implicitly (◐); the rest have a single backend or are unverified (○ / ?). Blue rows are the five deep-dive samples, expanded one by one in §03.</span></span></div>
+        <div class="route-note"><i></i><span><span class="zh"><b>怎么读这张表：</b>最右侧的「动态路由」一列没有任何一个 ●——C 组的 4 个项目让两类后端共存，但选择是设计时固定或由 LLM 隐式决定（◐）；Thea、RoboOS 由 LLM 在工具间隐式选择（◐）；其余项目只有单一后端或未核实（○ / ?）。浅蓝色行是 6 个深拆样本，在 §03 逐项展开。</span>
+          <span class="en"><b>How to read it:</b> the rightmost “dynamic routing” column contains no ● at all. The four projects in group C do run both backends, but the choice is fixed at design time or made implicitly by the LLM (◐); Thea and RoboOS let the LLM choose among tools implicitly (◐); the rest have a single backend or are unverified (○ / ?). Blue rows are the six deep-dive samples, expanded one by one in §03.</span></span></div>
         <p class="caption"><span class="zh">来源：论文、README 与项目主页（2026-09-11）。深拆样本的取值与 §03 的能力矩阵一致；◐ 与 ? 单元格引用前请核实。</span>
           <span class="en">Sources: papers, READMEs and project pages as of 11 Sep 2026. Values for the deep-dive samples match the capability matrix in §03; verify ◐ and ? cells before citing.</span></p>
         </div>
@@ -771,13 +762,14 @@
       </div>
 
       <div class="content wide">
-        <div class="sub-head"><span class="zh">五个重点样本与 Demo</span><span class="en">Five deep dives and demos</span></div>
+        <div class="sub-head"><span class="zh">六个重点样本与 Demo</span><span class="en">Six deep dives and demos</span></div>
         <!-- EDIT: one-line "what to borrow" per system (keep in sync with each card's takeaway) -->
         <nav class="borrow" aria-label="Systems">
           <a href="#p-holoagent"><b>HoloAgent-0</b><span class="zh">带恢复边的类型化 skill graph</span><span class="en">Typed skill graph with recovery edges</span></a>
           <a href="#p-roboos"><b>RoboOS</b><span class="zh">一小套正交、参数化的 Skill</span><span class="en">A small set of orthogonal, parameterized skills</span></a>
           <a href="#p-thea"><b>Thea</b><span class="zh">评估即退出码 + 工具经验</span><span class="en">Evaluation as exit codes + tool experience</span></a>
           <a href="#p-dimos"><b>DimOS</b><span class="zh">每条观测都带位姿和时间</span><span class="en">Every observation carries pose + time</span></a>
+          <a href="#p-harness"><b>Harness VLA</b><span class="zh">VLA 只做接触段，失败后先重新摆位</span><span class="en">VLA only for contact phases; re-stage after failure</span></a>
           <a href="#p-hivla"><b>Hi-VLA Design Study</b><span class="zh">用成功检测终止 VLA 调用</span><span class="en">End VLA calls on success detection</span></a>
         </nav>
 
@@ -920,7 +912,7 @@
                   <span class="en"><b>A few parameterized skills</b>: the RoboSkill example has only <code>navigate_to_target(target)</code>, <code>grasp_object(object)</code> and <code>place_to_affordance(affordance, object)</code>. <span class="to">→ The design rule for RoboClaw’s skill set.</span></span></li>
                 <li><span class="zh"><b>Skill 描述里写明调用条件</b>：例如“已经成功就不要再调用”，相当于给 LLM 的轻量前置条件。<span class="to">→ RoboClaw 可以在 Skill 定义里显式写前置 / 后置条件。</span></span>
                   <span class="en"><b>Call conditions in the skill description</b>: e.g. “do not call once it has succeeded”, a lightweight precondition for the LLM. <span class="to">→ RoboClaw can make pre/post-conditions explicit in each skill definition.</span></span></li>
-                <li><span class="zh"><b>大脑 / 小脑分离</b>：大脑只做规划和调度，小脑执行技能，Redis 共享记忆同步状态。<span class="to">→ 对应 LLM 只下高层指令、Skill Runtime 负责执行。</span></span>
+                <li><span class="zh"><b>High / Low level 分离</b>：大脑只做规划和调度，小脑执行技能，Redis 共享记忆同步状态。<span class="to">→ 对应 LLM 只下高层指令、Skill Runtime 负责执行。</span></span>
                   <span class="en"><b>Brain / cerebellum split</b>: the brain plans and schedules, the cerebellum runs skills, and Redis-backed shared memory keeps state in sync. <span class="to">→ Matches “the LLM issues high-level commands, the skill runtime executes”.</span></span></li>
               </ul>
               <h4><span class="zh">局限</span><span class="en">Limitations</span></h4>
@@ -987,8 +979,8 @@
               <p><span class="zh">LLM 每轮只调用一个工具，工具背后是封装好的策略（π0.5、ACT、LingBot-VLA）；每个动作后由 VLM 评估器返回“成功 / 失败 / 进行中”。</span>
                 <span class="en">The LLM makes one tool call per turn over wrapped policies (π0.5, ACT, LingBot-VLA). After each action a VLM evaluator returns success / failure / in-progress.</span></p>
               <h4><span class="zh">突出之处</span><span class="en">Where it stands out</span></h4>
-              <p><span class="zh">唯一把 VLA 当一等工具、并有实测验证器（准确率 93.3%）的系统。</span>
-                <span class="en">The only system with VLAs as first-class tools and a measured verifier (93.3% accuracy).</span></p>
+              <p><span class="zh">深拆样本中唯一把 VLA 当一等工具、并有实测验证器（准确率 93.3%）的系统。</span>
+                <span class="en">The only deep-dive system with VLAs as first-class tools and a measured verifier (93.3% accuracy).</span></p>
               <h4><span class="zh">对 RoboClaw 的启发</span><span class="en">Lessons for RoboClaw</span></h4>
               <ul class="inspire">
                 <li><span class="zh"><b>评估器即退出码</b>：每个动作后 VLM 评估器返回成功 / 失败 / 进行中（准确率 93.3%）。<span class="to">→ RoboClaw 验证层的直接参考：VLA 的结束信号由外部评估器给出。</span></span>
@@ -1101,8 +1093,100 @@
             <ul>
               <li><span class="zh">传输层：LCM、SHM、DDS、Zenoh、ROS 2；通过 MuJoCo blueprint 仿真；Go2 稳定，G1 / xArm / Piper 为 beta，无人机为 alpha。</span>
                 <span class="en">Transports: LCM, SHM, DDS, Zenoh, ROS 2. Simulation via MuJoCo blueprints. Go2 stable, G1 / xArm / Piper beta, drones alpha.</span></li>
-              <li><span class="zh">memory2 后端：SQLite + R*Tree + 向量索引；v0.0.11 移除了旧 agent 类（及其 agent 侧记忆）。详见 <code>memory_research.md</code> 第 3 节。</span>
-                <span class="en">memory2 backend: SQLite + R*Tree + vector index. The old agent class (and its agent-side memory) was removed in v0.0.11. See <code>memory_research.md</code> §3.</span></li>
+              <li><span class="zh">memory2 后端：SQLite + R*Tree + 向量索引；v0.0.11 移除了旧 agent 类（及其 agent 侧记忆）。</span>
+                <span class="en">memory2 backend: SQLite + R*Tree + vector index. The old agent class (and its agent-side memory) was removed in v0.0.11.</span></li>
+            </ul>
+          </details>
+        </article>
+
+        <!-- ============ PROJECT: Harness VLA ============ -->
+        <article class="project" id="p-harness">
+          <div class="project-head">
+            <div class="project-title">
+              <div class="project-meta"><span class="kind"><span class="zh">系统</span><span class="en">System</span></span><span class="zh">清华大学等</span><span class="en">Tsinghua University et al.</span> · arXiv 2607.08448 · 2026.07</div>
+              <h3>Harness VLA</h3>
+              <p><span class="zh">冻结的 VLA 只负责接触密集阶段，其余由解析式原语完成；编码 Agent 规划器在失败后重新摆位再重试，并从执行记录中学习每个原语的适用范围。</span>
+                <span class="en">The frozen VLA handles only contact-rich phases and analytic primitives do the rest; a coding-agent planner re-stages and retries after failure, and learns each primitive’s operating range from execution traces.</span></p>
+            </div>
+            <div class="chips">
+              <span class="chip"><span class="zh">冻结 VLA</span><span class="en">Frozen VLA</span></span>
+              <span class="chip"><span class="zh">解析式原语</span><span class="en">Analytic primitives</span></span>
+              <span class="chip"><span class="zh">任务记忆</span><span class="en">Task memory</span></span>
+            </div>
+          </div>
+
+          <div class="project-grid">
+            <div class="demo-box" data-demo>
+              <div class="demo-stage"></div>
+              <div class="demo-caption"></div>
+              <ul class="demo-clips">
+                <li><button class="active" data-kind="image" data-src="https://harnessvla.github.io/HarnessVLA/figures/Abstract_figure.png"
+                  data-caption-zh="思路示意：部署扰动下 VLA 单独执行容易失败（红色虚线）；Harness VLA 用解析式原语（绿）把机器人带回 VLA 的分布内区域，再由 VLA 完成接触阶段（黄）。点击放大。" data-caption-en="Idea: under deployment perturbations the VLA alone often fails (red dashes); Harness VLA uses analytic primitives (green) to bring the robot back into regions the VLA handles, then lets the VLA do the contact phase (yellow). Click to enlarge."
+                  data-origin="https://harnessvla.github.io/"><span class="zh">思路示意</span><span class="en">Idea</span></button></li>
+                <li><button data-kind="image" data-src="https://github.com/RLinf/misc/raw/main/pic/harnessvla_scheme.png"
+                  data-caption-zh="系统总览：编码 Agent 规划器、解析式原语与 VLA 原语、任务记忆与全局记忆。" data-caption-en="Framework: coding-agent planner, analytic and VLA primitives, task and global memory."
+                  data-origin="https://rpent.readthedocs.io/en/latest/rst_source/awesome_works/harnessvla.html"><span class="zh">系统总览</span><span class="en">Framework</span></button></li>
+                <li><button data-kind="image" data-src="https://harnessvla.github.io/HarnessVLA/figures/goal_t2_pi0pert.png"
+                  data-caption-zh="LIBERO-Pro 目标交换扰动：冻结 VLA 仍按原任务执行，结果失败。" data-caption-en="LIBERO-Pro goal-swap perturbation: the frozen VLA repeats the original task and fails."
+                  data-origin="https://harnessvla.github.io/"><span class="zh">扰动：冻结 VLA</span><span class="en">Perturbed: frozen VLA</span></button></li>
+                <li><button data-kind="image" data-src="https://harnessvla.github.io/HarnessVLA/figures/goal_t2_hybpert.png"
+                  data-caption-zh="同一扰动下，Harness VLA 按当前指令重新定位目标，完成任务。" data-caption-en="Same perturbation: Harness VLA re-grounds the target from the current instruction and succeeds."
+                  data-origin="https://harnessvla.github.io/"><span class="zh">扰动：Harness VLA</span><span class="en">Perturbed: Harness VLA</span></button></li>
+                <li><button data-kind="image" data-src="https://harnessvla.github.io/HarnessVLA/figures/exp_analysis/cmd_68_pi0_pick.png"
+                  data-caption-zh="分工 1/3：VLA 原语完成抓取（接触阶段）。" data-caption-en="Division of labour 1/3: the VLA primitive performs the grasp (contact phase)."
+                  data-origin="https://harnessvla.github.io/"><span class="zh">VLA 抓取</span><span class="en">VLA grasp</span></button></li>
+                <li><button data-kind="image" data-src="https://harnessvla.github.io/HarnessVLA/figures/exp_analysis/cmd_70_move_to.png"
+                  data-caption-zh="分工 2/3：解析式原语 move_to 把物体运到篮子上方（非接触阶段）。" data-caption-en="Division of labour 2/3: the analytic move_to primitive carries the object above the basket (non-contact phase)."
+                  data-origin="https://harnessvla.github.io/"><span class="zh">原语转运</span><span class="en">Primitive transport</span></button></li>
+                <li><button data-kind="image" data-src="https://harnessvla.github.io/HarnessVLA/figures/exp_analysis/cmd_72_release.png"
+                  data-caption-zh="分工 3/3：解析式原语 release 把物体放入篮中。" data-caption-en="Division of labour 3/3: the analytic release primitive drops the object into the basket."
+                  data-origin="https://harnessvla.github.io/"><span class="zh">原语释放</span><span class="en">Primitive release</span></button></li>
+              </ul>
+              <p class="demo-note"><span class="zh">项目主页只有仿真中的静态图，没有视频。</span><span class="en">The project page has simulation stills only, no video.</span></p>
+            </div>
+
+            <aside class="notes">
+              <h4><span class="zh">核心机制</span><span class="en">Core mechanism</span></h4>
+              <p><span class="zh">编码 Agent（Codex 或 Claude Code）读取任务与 RGB-D 观测，调用两类原语：解析式原语（move_to、底盘导航、夹爪、释放等）负责非接触的摆位与转运；冻结的 VLA 作为可重试原语，负责抓取、受限放置、开抽屉等接触阶段。每次执行后检查结果，必要时先重新摆位再重试。</span>
+                <span class="en">A coding agent (Codex or Claude Code) reads the task and RGB-D observations and calls two kinds of primitives: analytic primitives (move_to, base navigation, gripper, release) handle non-contact staging and transport; the frozen VLA, exposed as a retryable primitive, handles contact phases such as grasping, constrained placement and opening drawers. After each call the planner checks the outcome and, when needed, re-stages before retrying.</span></p>
+              <h4><span class="zh">硬数据</span><span class="en">What the numbers say</span></h4>
+              <p><span class="zh">同一冻结 VLA 加上 harness 后：LIBERO-PRO 50.0% → 82.4%，RoboCasa365 30.0% → 55.4%，RoboTwin C2R 50.4% → 58.4%；标准 LIBERO 基本持平（95.3% → 96.0%）。</span>
+                <span class="en">The same frozen VLA with the harness: LIBERO-PRO 50.0% → 82.4%, RoboCasa365 30.0% → 55.4%, RoboTwin C2R 50.4% → 58.4%; standard LIBERO is roughly unchanged (95.3% → 96.0%).</span></p>
+              <h4><span class="zh">对 RoboClaw 的启发</span><span class="en">Lessons for RoboClaw</span></h4>
+              <ul class="inspire">
+                <li><span class="zh"><b>按阶段分工</b>：接触密集阶段交给 VLA，其余由确定性原语完成。<span class="to">→ 与 RoboClaw 的主动切换同一思路，可作为直接对照。</span></span>
+                  <span class="en"><b>Split by phase</b>: contact-rich phases go to the VLA, everything else to deterministic primitives. <span class="to">→ The same idea as RoboClaw’s active switching, and a direct point of comparison.</span></span></li>
+                <li><span class="zh"><b>失败后先重新摆位</b>：规划器调整接近位姿、视角或局部摆放，再调用 VLA。<span class="to">→ RoboClaw 把“摆到哪里”写成 VLA Skill 的显式起始条件，由 Runtime 检查。</span></span>
+                  <span class="en"><b>Re-stage before retrying</b>: the planner adjusts the approach pose, viewpoint or local staging, then calls the VLA again. <span class="to">→ RoboClaw turns “where to stage” into an explicit start condition of each VLA skill, checked by the runtime.</span></span></li>
+                <li><span class="zh"><b>从执行记录学习原语的适用范围</b>：任务记忆把成功的原语组合参数化保存，全局记忆保存成功规则与失败模式。<span class="to">→ 可用来估计 VLA 起始条件的范围，也对应“积累与演化”。</span></span>
+                  <span class="en"><b>Learn primitive operating ranges from traces</b>: task memory stores successful primitive compositions in parameterized form; global memory stores success rules and failure modes. <span class="to">→ A way to estimate the range of a VLA’s start condition, and a match for “Evolve”.</span></span></li>
+              </ul>
+              <h4><span class="zh">局限</span><span class="en">Limitations</span></h4>
+              <p><span class="zh">论文实验全部在仿真中完成；切换由规划器按任务结构决定，没有显式的起始条件；真机扩展（双臂 Franka，2026-09）相机固定，尚无公开评测。</span>
+                <span class="en">All paper experiments are in simulation. Switching is decided by the planner from task structure, with no explicit start condition. The real-robot extension (dual Franka, Sep 2026) uses fixed cameras and has no published evaluation.</span></p>
+              <h4><span class="zh">链接</span><span class="en">Links</span></h4>
+              <p class="links">
+                <a href="https://github.com/RLinf/RPent" target="_blank" rel="noopener">GitHub</a>
+                <a href="https://arxiv.org/abs/2607.08448" target="_blank" rel="noopener"><span class="zh">论文</span><span class="en">Paper</span></a>
+                <a href="https://harnessvla.github.io/" target="_blank" rel="noopener"><span class="zh">项目主页</span><span class="en">Project page</span></a>
+              </p>
+            </aside>
+          </div>
+
+          <div class="takeaway">
+            <span class="zh">VLA 的许多失败并非不会抓放，而是作用对象不对、起始状态不利或所处阶段不对；与其训练更大的 VLA，不如组织好何时、从什么状态调用它。这正是 RoboClaw 主动切换的出发点。</span>
+            <span class="en">Many VLA failures are not about being unable to grasp or place, but about acting on the wrong target, from an unfavourable state, or at the wrong stage. Rather than training a larger VLA, organize when and from what state it is called. This is where RoboClaw’s active switching starts.</span></div>
+          <details class="evidence">
+            <summary><span class="zh">证据说明</span><span class="en">Evidence notes</span></summary>
+            <ul>
+              <li><span class="zh">冻结的 VLA：LIBERO / LIBERO-PRO 用 RLinf 的 π0.5 SFT 模型（π<sub>RLinf</sub>），RoboCasa365 用 RLDX-1，RoboTwin C2R 用 LingBot-VLA；规划器为 Codex 与 Claude Code。</span>
+                <span class="en">Frozen VLAs: RLinf’s π0.5 SFT checkpoint (π<sub>RLinf</sub>) on LIBERO / LIBERO-PRO, RLDX-1 on RoboCasa365, LingBot-VLA on RoboTwin C2R. Planners: Codex and Claude Code.</span></li>
+              <li><span class="zh">摘要中 LIBERO-PRO 的“+38.6 个百分点”是相对 RATS（43.8%）；相对同一冻结 VLA（50.0%）为 +32.4 个百分点。</span>
+                <span class="en">The abstract’s “+38.6 points” on LIBERO-PRO is measured against RATS (43.8%); against the same frozen VLA (50.0%) it is +32.4 points.</span></li>
+              <li><span class="zh">仿真中的原语直接调用仿真器控制接口：RoboCasa 的 move_to 是末端 OSC 闭环伺服，RoboTwin 的 move_to 调用环境运动规划器生成关节路径，均不经 ROS。</span>
+                <span class="en">In simulation the primitives call the simulator’s control API directly: RoboCasa’s move_to is a closed-loop end-effector OSC servo, and RoboTwin’s calls the environment’s motion planner for a joint path; neither uses ROS.</span></li>
+              <li><span class="zh">RPent 于 2026-09 新增双臂 Franka 真机扩展：经 franky/libfranka 控制，π0.5 负责抓取、交接与放置片段，规则原语只做自由空间对位；相机固定，提示词明确禁止为改善视角移动机械臂。</span>
+                <span class="en">RPent added a dual-Franka real-robot extension in Sep 2026: controlled through franky/libfranka, with π0.5 running grasp, handover and place segments and rule-based primitives limited to free-space staging; cameras are fixed, and the prompt forbids moving an arm to improve the view.</span></li>
             </ul>
           </details>
         </article>
@@ -1181,69 +1265,78 @@
         </article>
 
         <div class="key-row">
-          <span class="yes"><span class="m">●</span><span class="zh">有文档且有展示</span><span class="en">documented &amp; shown</span></span>
-          <span class="partial"><span class="m">◐</span><span class="zh">部分 / 仅声称</span><span class="en">partial / claimed</span></span>
-          <span class="no"><span class="m">○</span><span class="zh">明确不具备</span><span class="en">explicitly absent</span></span>
-          <span class="unk"><span class="m">?</span><span class="zh">资料中未找到</span><span class="en">not found in sources</span></span>
+          <span class="yes"><span class="m">●</span><span class="zh">有文档或 Demo 为证</span><span class="en">documented or shown</span></span>
+          <span class="partial"><span class="m">◐</span><span class="zh">部分具备、仅声称，或固定 / 隐式</span><span class="en">partial, claimed only, or fixed / implicit</span></span>
+          <span class="no"><span class="m">○</span><span class="zh">不具备或不涉及</span><span class="en">absent or out of scope</span></span>
+          <span class="unk"><span class="m">?</span><span class="zh">资料中未找到或未核实</span><span class="en">not found or not verified</span></span>
         </div>
 
         <p class="reading"><b><span class="zh">解读：</span><span class="en">Reading:</span></b>
-          <span class="zh">四个完整系统样本中有三个展示了导航或搜索；Thea 展示了学习型移动操作和镜头中的失败恢复。在本次核对到的公开 Demo 中，尚未看到同一任务内根据状态动态切换 ROS 与 VLA。</span>
-          <span class="en">three of the four full-system samples show navigation or search. Thea shows learned mobile manipulation and an on-camera failure-to-recovery loop. In the public demos reviewed here, no same-task state-dependent switch between ROS and VLA was found.</span></p>
+          <span class="zh">五个完整系统中，HoloAgent-0、Thea 与 DimOS 展示了导航或物体搜索；Thea 还展示了学习型移动操作，以及由评估器触发、在镜头中完成的失败恢复；Harness VLA 只公开了仿真中的静态图。</span>
+          <span class="en">of the five full systems, HoloAgent-0, Thea and DimOS demonstrate navigation or object search; Thea also demonstrates learned mobile manipulation and an on-camera recovery triggered by its evaluator; Harness VLA publishes simulation stills only.</span></p>
         <!-- EDIT: demo coverage values -->
         <div class="table-wrap">
           <table class="matrix">
-            <colgroup><col class="c0"><col><col><col><col></colgroup>
+            <colgroup><col class="c0"><col><col><col><col><col></colgroup>
             <thead>
               <tr><th><span class="zh">A · 公开 demo 展示</span><span class="en">A · What public demos show</span></th>
-                <th><a href="#p-holoagent">HoloAgent-0</a></th><th><a href="#p-roboos">RoboOS</a></th><th><a href="#p-thea">Thea</a></th><th><a href="#p-dimos">DimOS</a></th></tr>
+                <th><a href="#p-holoagent">HoloAgent-0</a></th><th><a href="#p-roboos">RoboOS</a></th><th><a href="#p-thea">Thea</a></th><th><a href="#p-dimos">DimOS</a></th><th><a href="#p-harness">Harness VLA</a></th></tr>
             </thead>
             <tbody>
               <tr><td><span class="zh">导航 / 探索</span><span class="en">Navigation / exploration</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">搜索、路径、探索</span><span class="en">Search, route, explore</span></td>
                 <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">先导航再操作</span><span class="en">Navigate, then manipulate</span></td>
-                <td class="yes"><span class="m">●</span><span class="zh">SLAM + 探索</span><span class="en">SLAM + exploration</span></td></tr>
+                <td class="yes"><span class="m">●</span><span class="zh">SLAM + 探索</span><span class="en">SLAM + exploration</span></td>
+                <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td></tr>
               <tr><td><span class="zh">物体搜索 / 空间回忆</span><span class="en">Object search / spatial recall</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">找到咖啡机</span><span class="en">Find the coffee machine</span></td>
                 <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">任务中通过场景图</span><span class="en">Via scene graph in tasks</span></td>
-                <td class="yes"><span class="m">●</span><span class="zh">空间记忆回忆</span><span class="en">Spatial-memory recall</span></td></tr>
+                <td class="yes"><span class="m">●</span><span class="zh">空间记忆回忆</span><span class="en">Spatial-memory recall</span></td>
+                <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td></tr>
               <tr><td><span class="zh">桌面抓放</span><span class="en">Tabletop pick &amp; place</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">包含在移动操作中</span><span class="en">Within mobile manipulation</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">仅静态图</span><span class="en">Figures only</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">L1 / L2 任务</span><span class="en">L1 / L2 tasks</span></td>
-                <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td></tr>
+                <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td>
+                <td class="partial"><span class="m">◐</span><span class="zh">仿真静态图</span><span class="en">Simulation stills</span></td></tr>
               <tr><td><span class="zh">移动操作</span><span class="en">Mobile manipulation</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">长程视频</span><span class="en">Long-horizon video</span></td>
                 <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">“帮我拿瓶水”</span><span class="en">“Grab me a water”</span></td>
-                <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td></tr>
+                <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td>
+                <td class="unk"><span class="m">?</span><span class="zh">仅有仿真成绩</span><span class="en">Simulation scores only</span></td></tr>
               <tr><td><span class="zh">多机协作</span><span class="en">Multi-robot coordination</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">跨机视频</span><span class="en">Cross-robot video</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">控制台截图</span><span class="en">Console screenshots</span></td>
                 <td class="no"><span class="m">○</span><span class="zh">单机</span><span class="en">Single robot</span></td>
-                <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td></tr>
+                <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td>
+                <td class="no"><span class="m">○</span><span class="zh">单机</span><span class="en">Single robot</span></td></tr>
               <tr><td><span class="zh">人形全身</span><span class="en">Humanoid whole-body</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">提示式动作控制</span><span class="en">Prompt motion control</span></td>
                 <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">G1 用于操作</span><span class="en">G1 for manipulation</span></td>
-                <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td></tr>
+                <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td>
+                <td class="no"><span class="m">○</span><span class="zh">不涉及</span><span class="en">Out of scope</span></td></tr>
               <tr><td><span class="zh">失败 → 恢复（镜头中）</span><span class="en">Failure → recovery on camera</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">论文中声称</span><span class="en">Claimed in paper</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">声称</span><span class="en">Claimed</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">评估结论 → 重试</span><span class="en">Evaluator verdict → retry</span></td>
-                <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td></tr>
+                <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td>
+                <td class="partial"><span class="m">◐</span><span class="zh">论文描述，图中未展示</span><span class="en">Described, not shown</span></td></tr>
               <tr><td><span class="zh">真机定量评估</span><span class="en">Quantitative real-robot eval</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">仅建图与导航</span><span class="en">Mapping &amp; navigation only</span></td>
                 <td class="unk"><span class="m">?</span><span class="zh">未核实</span><span class="en">Not verified</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">L1–L3 成功率 + 评估器</span><span class="en">L1–L3 success + evaluator</span></td>
-                <td class="no"><span class="m">○</span><span class="zh">未发布</span><span class="en">None published</span></td></tr>
+                <td class="no"><span class="m">○</span><span class="zh">未发布</span><span class="en">None published</span></td>
+                <td class="no"><span class="m">○</span><span class="zh">仅仿真</span><span class="en">Simulation only</span></td></tr>
               <tr class="hl"><td><span class="zh">同一任务内 ROS ↔ VLA 切换</span><span class="en">ROS ↔ VLA switching in one task</span></td>
                 <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td>
                 <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td>
-                <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td>
-                <td class="unk"><span class="m">?</span><span class="zh">未展示</span><span class="en">Not shown</span></td></tr>
+                <td class="no"><span class="m">○</span><span class="zh">无 ROS 后端</span><span class="en">No ROS backend</span></td>
+                <td class="no"><span class="m">○</span><span class="zh">文档未涉及 VLA</span><span class="en">No VLA in docs</span></td>
+                <td class="no"><span class="m">○</span><span class="zh">无 ROS；原语 ↔ VLA（仿真）</span><span class="en">No ROS; primitives ↔ VLA (sim)</span></td></tr>
             </tbody>
           </table>
         </div>
@@ -1253,88 +1346,101 @@
         <!-- EDIT: capability matrix values -->
         <div class="table-wrap">
           <table class="matrix">
-            <colgroup><col class="c0"><col><col><col><col></colgroup>
+            <colgroup><col class="c0"><col><col><col><col><col></colgroup>
             <thead>
-              <tr><th><span class="zh">B · 文档中声称具备的能力</span><span class="en">B · Capabilities claimed in documentation</span></th><th>HoloAgent-0</th><th>RoboOS</th><th>Thea</th><th>DimOS</th></tr>
+              <tr><th><span class="zh">B · 文档中声称具备的能力</span><span class="en">B · Capabilities claimed in documentation</span></th><th>HoloAgent-0</th><th>RoboOS</th><th>Thea</th><th>DimOS</th><th><a href="#p-harness">Harness VLA</a></th></tr>
             </thead>
             <tbody>
-              <tr class="group"><th colspan="5"><span class="zh">记忆与上下文</span><span class="en">Memory &amp; context</span></th></tr>
+              <tr class="group"><th colspan="6"><span class="zh">记忆与上下文</span><span class="en">Memory &amp; context</span></th></tr>
               <tr><td><span class="zh">空间记忆</span><span class="en">Spatial memory</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">3D 度量 + 语义地图</span><span class="en">3D metric + semantic map</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">共享记忆（Redis）</span><span class="en">Shared memory (Redis)</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">场景图引用，粗略位置</span><span class="en">Scene-graph refs, coarse position</span></td>
-                <td class="yes"><span class="m">●</span><span class="zh">带位姿的观测</span><span class="en">Pose-stamped observations</span></td></tr>
+                <td class="yes"><span class="m">●</span><span class="zh">带位姿的观测</span><span class="en">Pose-stamped observations</span></td>
+                <td class="no"><span class="m">○</span><span class="zh">刻意不存坐标，按观测重定位</span><span class="en">Stores no coordinates; re-localizes</span></td></tr>
               <tr><td><span class="zh">时间 / 事件记忆</span><span class="en">Temporal / event memory</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">执行轨迹与结果</span><span class="en">Execution traces, outcomes</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">结构未核实</span><span class="en">Schema not verified</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">Task Notes 时间线</span><span class="en">Task Notes timeline</span></td>
-                <td class="yes"><span class="m">●</span><span class="zh">按时间过滤的数据流</span><span class="en">Time-filtered streams</span></td></tr>
+                <td class="yes"><span class="m">●</span><span class="zh">按时间过滤的数据流</span><span class="en">Time-filtered streams</span></td>
+                <td class="yes"><span class="m">●</span><span class="zh">执行记录 → 任务记忆</span><span class="en">Traces → task memory</span></td></tr>
               <tr><td><span class="zh">语义记忆 / 场景图</span><span class="en">Semantic memory / scene graph</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">层级场景图</span><span class="en">Hierarchical scene graph</span></td>
                 <td class="unk"><span class="m">?</span><span class="zh">未核实</span><span class="en">Not verified</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">场景图摘要 + 按引用取回</span><span class="en">Scene-graph brief + fetch by ref</span></td>
-                <td class="partial"><span class="m">◐</span><span class="zh">向量检索，无场景图</span><span class="en">Vector retrieval, no graph</span></td></tr>
+                <td class="partial"><span class="m">◐</span><span class="zh">向量检索，无场景图</span><span class="en">Vector retrieval, no graph</span></td>
+                <td class="unk"><span class="m">?</span><span class="zh">未说明</span><span class="en">Not documented</span></td></tr>
               <tr><td><span class="zh">上下文检索</span><span class="en">Context retrieval</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">循环内空间检索</span><span class="en">Spatial retrieval in loop</span></td>
                 <td class="unk"><span class="m">?</span><span class="zh">未核实</span><span class="en">Not verified</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">常驻 / 刷新 / 累积 三层</span><span class="en">Resident / refreshed / accumulated</span></td>
-                <td class="yes"><span class="m">●</span><span class="zh">时空 RAG</span><span class="en">Spatio-temporal RAG</span></td></tr>
+                <td class="yes"><span class="m">●</span><span class="zh">时空 RAG</span><span class="en">Spatio-temporal RAG</span></td>
+                <td class="yes"><span class="m">●</span><span class="zh">取回任务骨架与全局规则</span><span class="en">Task skeleton + global rules</span></td></tr>
 
-              <tr class="group"><th colspan="5"><span class="zh">规划与验证</span><span class="en">Planning &amp; verification</span></th></tr>
+              <tr class="group"><th colspan="6"><span class="zh">规划与验证</span><span class="en">Planning &amp; verification</span></th></tr>
               <tr><td><span class="zh">显式任务规划</span><span class="en">Explicit task planning</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">指令 → skill graph</span><span class="en">Instruction → skill graph</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">按机器人拆子任务</span><span class="en">Per-robot subtasks</span></td>
                 <td class="no"><span class="m">○</span><span class="zh">每轮单次 tool call</span><span class="en">One tool call per turn</span></td>
-                <td class="unk"><span class="m">?</span><span class="zh">未说明</span><span class="en">Not documented</span></td></tr>
+                <td class="unk"><span class="m">?</span><span class="zh">未说明</span><span class="en">Not documented</span></td>
+                <td class="yes"><span class="m">●</span><span class="zh">复用学到的原语序列骨架</span><span class="en">Reuses a learned primitive skeleton</span></td></tr>
               <tr class="hl"><td><span class="zh">DAG / 验证器</span><span class="en">DAG / verifier</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">图 + 运行时监控</span><span class="en">Graph + runtime monitor</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">声称有“纠错”</span><span class="en">“Error correction” claimed</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">验证器（93.3%），无 DAG</span><span class="en">Verifier (93.3%), no DAG</span></td>
-                <td class="unk"><span class="m">?</span><span class="zh">未说明</span><span class="en">Not documented</span></td></tr>
+                <td class="unk"><span class="m">?</span><span class="zh">未说明</span><span class="en">Not documented</span></td>
+                <td class="partial"><span class="m">◐</span><span class="zh">成功规则 + 失败模型，无 DAG</span><span class="en">Success rules + failure models, no DAG</span></td></tr>
 
-              <tr class="group"><th colspan="5"><span class="zh">执行</span><span class="en">Execution</span></th></tr>
+              <tr class="group"><th colspan="6"><span class="zh">执行</span><span class="en">Execution</span></th></tr>
               <tr class="hl"><td><span class="zh">ROS 集成</span><span class="en">ROS integration</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">ROS 2 指令/状态总线</span><span class="en">ROS 2 command/status bus</span></td>
                 <td class="unk"><span class="m">?</span><span class="zh">未说明</span><span class="en">Not stated</span></td>
-                <td class="unk"><span class="m">?</span><span class="zh">未说明；使用厂商 SDK</span><span class="en">Not stated; vendor SDKs</span></td>
-                <td class="partial"><span class="m">◐</span><span class="zh">可选传输层</span><span class="en">Optional transport</span></td></tr>
+                <td class="no"><span class="m">○</span><span class="zh">不涉及；通过机器人 SDK 接入</span><span class="en">None; robots via vendor SDKs</span></td>
+                <td class="partial"><span class="m">◐</span><span class="zh">可选传输层</span><span class="en">Optional transport</span></td>
+                <td class="no"><span class="m">○</span><span class="zh">不经 ROS（仿真 API / libfranka）</span><span class="en">None (simulator API / libfranka)</span></td></tr>
               <tr><td><span class="zh">导航 / 操作工具</span><span class="en">Navigation / manipulation tools</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">两者都有</span><span class="en">Both</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">navigate / grasp / place 参数化 Skill</span><span class="en">Parameterized navigate / grasp / place skills</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">SysNav + 策略</span><span class="en">SysNav + policies</span></td>
-                <td class="partial"><span class="m">◐</span><span class="zh">导航稳定；操作为 beta</span><span class="en">Nav stable; manipulation beta</span></td></tr>
+                <td class="partial"><span class="m">◐</span><span class="zh">导航稳定；操作为 beta</span><span class="en">Nav stable; manipulation beta</span></td>
+                <td class="yes"><span class="m">●</span><span class="zh">解析式原语 + 底盘导航</span><span class="en">Analytic primitives + base navigation</span></td></tr>
               <tr class="hl"><td><span class="zh">VLA 集成</span><span class="en">VLA integration</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">按技能固定的后端</span><span class="en">Fixed per-skill backends</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">论文列出 OpenVLA、π₀ 等；代码未核实</span><span class="en">Paper lists OpenVLA, π₀ etc.; code not verified</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">π0.5、LingBot-VLA、ACT 作为工具</span><span class="en">π0.5, LingBot-VLA, ACT as tools</span></td>
-                <td class="unk"><span class="m">?</span><span class="zh">未说明</span><span class="en">Not documented</span></td></tr>
+                <td class="no"><span class="m">○</span><span class="zh">文档未涉及</span><span class="en">Not in docs</span></td>
+                <td class="yes"><span class="m">●</span><span class="zh">冻结 π0.5、RLDX-1、LingBot-VLA</span><span class="en">Frozen π0.5, RLDX-1, LingBot-VLA</span></td></tr>
               <tr class="hl"><td><span class="zh">后端路由（ROS / VLA 选择）</span><span class="en">Backend routing (ROS vs VLA)</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">按技能固定绑定</span><span class="en">Fixed per skill</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">论文称由 Agent 按反馈选工具（隐式）</span><span class="en">Paper: agent picks tools from feedback (implicit)</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">隐式，由 LLM 在 VLA 间选</span><span class="en">Implicit, LLM picks among VLAs</span></td>
-                <td class="no"><span class="m">○</span><span class="zh">仅确定性技能</span><span class="en">Deterministic skills only</span></td></tr>
+                <td class="no"><span class="m">○</span><span class="zh">仅确定性技能</span><span class="en">Deterministic skills only</span></td>
+                <td class="partial"><span class="m">◐</span><span class="zh">规划器按任务结构（隐式）</span><span class="en">Planner, by task structure (implicit)</span></td></tr>
               <tr><td><span class="zh">安全 / 恢复</span><span class="en">Safety / recovery</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">重新规划或澄清</span><span class="en">Re-plan or clarify</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">声称</span><span class="en">Claimed</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">净空检查、失败预算</span><span class="en">Clearance hooks, failure budget</span></td>
-                <td class="unk"><span class="m">?</span><span class="zh">未说明</span><span class="en">Not documented</span></td></tr>
+                <td class="unk"><span class="m">?</span><span class="zh">未说明</span><span class="en">Not documented</span></td>
+                <td class="yes"><span class="m">●</span><span class="zh">重新摆位后重试；真机关节复位</span><span class="en">Re-stage and retry; joint reset on robot</span></td></tr>
 
-              <tr class="group"><th colspan="5"><span class="zh">部署</span><span class="en">Deployment</span></th></tr>
+              <tr class="group"><th colspan="6"><span class="zh">部署</span><span class="en">Deployment</span></th></tr>
               <tr><td><span class="zh">仿真支持</span><span class="en">Simulation support</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">仅导航基准</span><span class="en">Navigation benchmark only</span></td>
                 <td class="unk"><span class="m">?</span><span class="zh">未说明</span><span class="en">Not stated</span></td>
                 <td class="partial"><span class="m">◐</span><span class="zh">LIBERO / RoboTwin 适配</span><span class="en">LIBERO / RoboTwin adapters</span></td>
-                <td class="yes"><span class="m">●</span><span class="zh">MuJoCo blueprint</span><span class="en">MuJoCo blueprints</span></td></tr>
+                <td class="yes"><span class="m">●</span><span class="zh">MuJoCo blueprint</span><span class="en">MuJoCo blueprints</span></td>
+                <td class="yes"><span class="m">●</span><span class="zh">LIBERO、RoboCasa365、RoboTwin</span><span class="en">LIBERO, RoboCasa365, RoboTwin</span></td></tr>
               <tr><td><span class="zh">真机支持</span><span class="en">Real-robot support</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">3 类机器人</span><span class="en">3 robot types</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">机械臂、人形、轮式</span><span class="en">Arms, humanoid, wheeled</span></td>
                 <td class="yes"><span class="m">●</span><span class="zh">3 类机器人</span><span class="en">3 robot types</span></td>
-                <td class="yes"><span class="m">●</span><span class="zh">四足；其他为 beta</span><span class="en">Quadruped; others beta</span></td></tr>
+                <td class="yes"><span class="m">●</span><span class="zh">四足；其他为 beta</span><span class="en">Quadruped; others beta</span></td>
+                <td class="partial"><span class="m">◐</span><span class="zh">双臂 Franka 扩展，无公开评测</span><span class="en">Dual-Franka extension, no published eval</span></td></tr>
             </tbody>
           </table>
         </div>
-        <p class="caption"><span class="zh">来源：论文、README 与项目主页（2026-09-11）。引用前请核实 ◐ / ? 单元格。</span>
-          <span class="en">Sources: papers, READMEs and project pages as of 11 Sep 2026. Verify ◐ / ? cells before citing.</span></p>
+        <p class="caption"><span class="zh">来源：论文、README 与项目主页（2026-09-11；Harness VLA 为 09-16）。引用前请核实 ◐ / ? 单元格。</span>
+          <span class="en">Sources: papers, READMEs and project pages as of 11 Sep 2026 (Harness VLA: 16 Sep). Verify ◐ / ? cells before citing.</span></p>
       </div>
     </section>
 
@@ -1343,15 +1449,15 @@
       <div class="section-head">
         <div class="section-title">
           <h2><span class="zh"><span class="section-index">04</span>缺口与 RoboClaw 方案</span><span class="en"><span class="section-index">04</span>The gap and RoboClaw’s approach</span></h2>
-          <p><span class="zh">前面的项目已经表明，ROS、经典控制器和 VLA 可以被统一封装成 Skill，甚至在同一任务中组合使用。当前更明显的缺口是：系统如何根据任务、环境和执行反馈选择合适的执行方式，如何在不同执行器之间可靠交接，并通过验证与恢复形成闭环。RoboClaw 主要针对这一层展开。</span>
-            <span class="en">The projects above show that ROS, classical controllers and VLAs can be wrapped uniformly as skills, and even combined within one task. The more obvious gap now is how a system chooses the right execution path from the task, the environment and execution feedback, how it hands over reliably between executors, and how verification and recovery close the loop. RoboClaw focuses on this layer.</span></p>
+          <p><span class="zh">本节首先界定 ROS 与 VLA 两类执行后端的衔接问题，继而梳理现有系统的处理方式，最后提出 RoboClaw 的设计，其核心是围绕 VLA 调用的主动切换。</span>
+            <span class="en">This section defines the problem of coordinating the ROS and VLA backends, reviews how existing systems handle it, and then presents RoboClaw’s design, centred on active switching around VLA calls.</span></p>
         </div>
       </div>
 
       <div class="content">
-        <div class="sub-head" style="margin-top:0"><span class="zh">一 · 问题出在两类后端的衔接上</span><span class="en">1 · The problem is in combining the two backends</span></div>
-        <p class="reading"><span class="zh">把 ROS 和 VLA 封装成 Skill 给 LLM 调用，部分项目已经能够做到。真正困难的是：<b>在什么情况下应该使用哪种执行方式、两者如何交接，以及执行过程中如何判断是否需要继续、恢复或切换。</b>ROS、VLA 都可能在底层“执行成功”后仍未完成真正的任务目标，因此 RoboClaw 不直接相信执行器自身的返回结果，而是在 Skill 层统一检查实际结果。验证结果随后用于决定继续执行、重试、重新观察、切换执行器或重新规划。</span>
-          <span class="en">Some projects can already wrap ROS and VLA as skills for an LLM. The real difficulty is <b>when to use which execution path, how to hand over between the two, and how to judge during execution whether to continue, recover or switch.</b> Both ROS and VLA can report “success” at the low level without achieving the actual task goal, so RoboClaw does not trust an executor’s own return value; it checks the actual outcome uniformly at the skill layer. The verification result then decides whether to continue, retry, re-observe, switch executors or replan.</span></p>
+        <div class="sub-head" style="margin-top:0"><span class="zh">一 · 问题界定：两类后端的衔接</span><span class="en">1 · Problem: coordinating the two backends</span></div>
+        <p class="reading"><span class="zh">将 ROS 技能与 VLA 策略统一封装为 LLM 可调用的 Skill，已有系统能够做到；尚未解决的是二者的协同，可分解为四个子问题：<b>后端选择</b>，即何种任务与环境条件下采用何种执行方式；<b>交接</b>，即控制权与状态如何在两类后端之间可靠传递；<b>执行监控</b>，即如何获取并更新环境与执行状态，据此判断继续、恢复还是切换；<b>经验利用</b>，即如何依据历史执行结果修正后续选择。此外，两类后端都可能在底层报告“执行成功”而实际未达成任务目标，因此执行器自身的返回值不能作为完成的依据。</span>
+          <span class="en">Existing systems can already wrap ROS skills and VLA policies as skills an LLM can call. What remains unsolved is their coordination, which decomposes into four sub-problems: <b>backend selection</b>, which execution path suits which task and environment conditions; <b>handover</b>, how control and state pass reliably between the two backends; <b>execution monitoring</b>, how to obtain and update environment and execution state and decide from it whether to continue, recover or switch; and <b>use of experience</b>, how past outcomes should revise later choices. Moreover, either backend can report “success” at the low level without achieving the task goal, so an executor’s own return value cannot serve as evidence of completion.</span></p>
         <div class="gap-box">
           <div class="gap-panel">
             <div class="tag"><span class="zh">A · 确定性</span><span class="en">A · Deterministic</span></div>
@@ -1379,9 +1485,9 @@
           </div>
         </div>
 
-        <div class="sub-head"><span class="zh">二 · 现有系统怎么处理</span><span class="en">2 · What existing systems do</span></div>
-        <p class="reading"><span class="zh">五个深拆样本都没有在运行时决定用哪个后端：有的在设计时就定死了，有的让 LLM 自己判断，有的本来就只有一种后端。</span>
-          <span class="en">None of the five deep dives decides at runtime which backend to use: some fix it at design time, some leave it to the LLM, and some only have one backend.</span></p>
+        <div class="sub-head"><span class="zh">二 · 现有系统的处理方式</span><span class="en">2 · How existing systems handle it</span></div>
+        <p class="reading"><span class="zh">六个深入分析的样本均未在运行时对后端作出显式选择：或在设计时固定绑定，或交由 LLM 隐式判断，或仅具备单一后端。</span>
+          <span class="en">None of the six deep dives makes an explicit backend choice at runtime: the choice is fixed at design time, left implicit to the LLM, or moot because only one backend exists.</span></p>
         <ul class="today">
           <li><b>HoloAgent-0</b><span class="how"><span class="zh">固定</span><span class="en">Fixed</span></span>
             <span><span class="zh">每类技能在设计时绑定一个后端。</span><span class="en">Each skill type maps to one backend at design time.</span></span></li>
@@ -1390,57 +1496,51 @@
           <li><b>Thea</b><span class="how"><span class="zh">隐式</span><span class="en">Implicit</span></span>
             <span><span class="zh">由 LLM 根据工具描述与经验笔记选择策略工具。</span><span class="en">The LLM picks a policy tool from descriptions and experience notes.</span></span></li>
           <li><b>DimOS</b><span class="how"><span class="zh">未涉及</span><span class="en">Not posed</span></span>
-            <span><span class="zh">只有确定性技能，没有 VLA 支持。</span><span class="en">Deterministic skills only, no VLA support.</span></span></li>
+            <span><span class="zh">文档中只有确定性技能，未涉及 VLA。</span><span class="en">Deterministic skills only; VLA does not appear in its documentation.</span></span></li>
+          <li><b>Harness VLA</b><span class="how"><span class="zh">隐式（规划器）</span><span class="en">Implicit (planner)</span></span>
+            <span><span class="zh">仿真中由编码 Agent 规划器按任务结构分工：非接触阶段用解析式原语，接触阶段用冻结 VLA，失败后重新摆位再重试；RPent 真机扩展改由提示规则调度，相机固定。</span><span class="en">In simulation a coding-agent planner splits the work by task structure: analytic primitives for non-contact phases, the frozen VLA for contact, re-staging and retrying after failure. RPent’s real-robot extension schedules by prompt rules, with fixed cameras.</span></span></li>
           <li><b>Hi-VLA Design Study</b><span class="how"><span class="zh">未涉及</span><span class="en">Not posed</span></span>
             <span><span class="zh">只有 VLA，但展示了如何更好地调用 VLA。</span><span class="en">VLA only, though it shows how to call VLAs well.</span></span></li>
         </ul>
 
         <div class="question">
-          <div class="lbl"><span class="zh">RoboClaw需要回答的问题</span><span class="en">The question to answer</span></div>
-          <p><span class="zh">Agent 怎样在 ROS 和 VLA 之间选对执行方式、在任务中途切换，出错能恢复，并随时更新对环境的认识？</span>
-            <span class="en">How can an agent pick the right one of ROS and VLA, switch between them mid-task, recover from errors, and keep its picture of the environment up to date?</span></p>
+          <div class="lbl"><span class="zh">RoboClaw 要回答的问题</span><span class="en">The question RoboClaw must answer</span></div>
+          <p><span class="zh">在同一任务中，如何依据实时状态协调 ROS 与 VLA，使二者互为补充，而非相互替代？</span>
+            <span class="en">Within one task, how can ROS and VLA be coordinated from live state so that they complement rather than replace each other?</span></p>
         </div>
 
         <div class="sub-head"><span class="zh">三 · RoboClaw</span><span class="en">3 · RoboClaw</span></div>
-        <p class="reading"><span class="zh">RoboClaw 不将后端选择简单交给 LLM 根据 Prompt 临时判断，而是将其作为 Runtime 中独立、可追踪的执行决策。Agent 按需查询环境、机器人状态和历史经验，由 Runtime 选择合适的执行方式，并把选择依据写进时间记忆；执行结束后，再通过验证结果判断该决策是否有效，并将结果反馈到后续选择中。我们的目标是构建一个能够长期运行的机器人 Runtime：按需理解环境，可靠组织和执行任务，验证实际结果，并通过持续积累的执行经验逐步提高稳定性。</span>
-          <span class="en">RoboClaw does not leave backend choice to an ad-hoc LLM judgment inside a prompt; the runtime makes it an independent, traceable execution decision. The agent queries the environment, robot state and past experience on demand; the runtime picks the execution path and writes its reasons into temporal memory. After execution, the verification result shows whether the decision worked and feeds back into later choices. Our goal is a robot runtime that can run for long periods: understand its environment on demand, organize and execute tasks reliably, verify actual outcomes, and become steadily more reliable from accumulated experience.</span></p>
-        <div class="takeaway">
-          <span class="zh"><strong>RoboClaw 的特点：主动切换。</strong>ROS 和 VLA 不只是二选一。例如 VLA 因环境干扰（光照、遮挡、物体偏离常见位置）表现下降时，Runtime 先切到 ROS 调整机器人位姿、相机视角或物体摆放，让任务回到 VLA 熟悉的训练条件，再交还给 VLA 继续执行。</span>
-          <span class="en"><strong>What sets RoboClaw apart: active switching.</strong> ROS and VLA are not just alternatives. When a VLA degrades under environmental noise (lighting, occlusion, an object away from its usual pose), the runtime switches to ROS to adjust the robot’s pose, the camera viewpoint or the object’s placement, bringing the task back to the VLA’s training conditions, then hands control back to the VLA.</span></div>
-        <p class="reading principles-lead"><b><span class="zh">设计原则</span><span class="en">Design principles</span></b></p>
-        <div class="reqs principles">
-          <div class="req"><b><span class="zh">状态按需获取</span><span class="en">State on demand</span></b>
-            <span class="zh">没有固定脚本把所有信息一次塞给 LLM。LLM 根据环境和任务，自己选工具查所需的状态，例如关节状态、时间记忆、空间记忆，汇总后再执行任务。</span>
-            <span class="en">No fixed script dumps everything into the LLM. The LLM picks tools to query the state the task needs, such as joint states, temporal memory or spatial memory, then combines them before acting.</span></div>
-          <div class="req"><b><span class="zh">信息带置信度、新鲜度和来源</span><span class="en">Confidence, freshness and provenance</span></b>
-            <span class="zh">交给 Agent 的信息尽可能都附带 confidence（有多可信）、freshness（多久以前的）和 provenance（来自哪个传感器、哪段记忆或哪次推断），让 LLM 知道哪些可以直接用、哪些需要重新观察。</span>
-            <span class="en">Agent-facing information carries, wherever possible, confidence (how reliable), freshness (how old) and provenance (which sensor, memory or inference it came from), so the LLM knows what it can use directly and what it should re-observe.</span></div>
-          <div class="req"><b><span class="zh">计划阶段 human-in-the-loop</span><span class="en">Human-in-the-loop at plan time</span></b>
-            <span class="zh">所有技能在 plan 阶段都支持 human-in-the-loop：执行前，人可以确认或修改计划中的步骤。</span>
-            <span class="en">Every skill supports human-in-the-loop at the plan stage: before execution, a person can confirm or edit the planned steps.</span></div>
-          <div class="req"><b><span class="zh">一小套正交、参数化的 Skill</span><span class="en">A small set of orthogonal, parameterized skills</span></b>
-            <span class="zh">受 RoboOS 启发：用少量正交、高复用、参数化的 Skill（例如 move_to(room)、pick(object)、place(target)）组合出大部分任务，LLM 只负责组合和填参数。每个 Skill 用 ROS 还是 VLA 实现，还需要讨论。</span>
-            <span class="en">Inspired by RoboOS: compose most tasks from a few orthogonal, reusable, parameterized skills (e.g. move_to(room), pick(object), place(target)); the LLM only composes them and fills in parameters. Whether each skill is implemented with ROS or VLA is still open for discussion.</span></div>
-          <div class="req"><b><span class="zh">安全靠硬约束，不靠 LLM</span><span class="en">Safety by hard constraints, not by the LLM</span></b>
-            <span class="zh">LLM 只下 pick object、move to room 这类高层指令；安全由 Skill Runtime 里的硬约束保证（例如限位、限速、碰撞检查），不依赖 LLM 判断。</span>
-            <span class="en">The LLM issues only high-level commands such as pick object or move to room; safety is enforced by hard constraints in the skill runtime (e.g. joint and speed limits, collision checks), never by LLM judgment.</span></div>
-          <div class="req"><b><span class="zh">推理写进时间记忆</span><span class="en">Reasoning goes into temporal memory</span></b>
-            <span class="zh">LLM 的推理（为什么这样规划、为什么选这个后端、为什么判定失败）和观测一起写进时间记忆，之后可以按时间查询和回放，用于诊断、重规划和经验积累。</span>
-            <span class="en">The LLM’s reasoning (why this plan, why this backend, why a step was judged a failure) is written into temporal memory alongside observations, so it can be queried and replayed by time for diagnosis, replanning and experience.</span></div>
+        <p class="reading"><span class="zh">RoboClaw 不将后端选择交由 LLM 在 Prompt 内临时判断，而将其作为 Runtime 中独立、可追溯的执行决策：决策依据（环境状态、机器人状态与历史表现）连同决策理由一并写入时间记忆；执行结束后，由验证结果评估该决策，并反馈至后续选择。</span>
+          <span class="en">RoboClaw does not leave backend selection to an ad-hoc judgment by the LLM inside the prompt; it treats selection as an independent, traceable execution decision in the runtime. The inputs to each decision (environment state, robot state and track record) are written to temporal memory together with its rationale, and after execution the verification result evaluates the decision and feeds back into later choices.</span></p>
+        <!-- EDIT: core design block (active switching). §01 finding 03 links here via #active-switching. -->
+        <div class="keypoint" id="active-switching">
+          <span class="eyebrow"><span class="zh">核心设计 · 主动切换</span><span class="en">Core design · Active switching</span></span>
+          <p class="lead"><span class="zh">ROS 与 VLA 并非二选一。VLA 对相机视角与机器人初始状态最为敏感，小幅扰动即可使成功率由 95% 降至 30% 以下（<a href="https://arxiv.org/abs/2510.13626" target="_blank" rel="noopener">LIBERO-Plus</a>）；而对机器人本体与机载相机而言，这两个因素恰好都能由 ROS 精确设定并加以验证，这正是切换发挥作用之处。</span>
+            <span class="en">ROS and VLA are not alternatives. VLAs are most sensitive to camera viewpoint and robot initial state: modest perturbations drop their success rate from 95% to below 30% (<a href="https://arxiv.org/abs/2510.13626" target="_blank" rel="noopener">LIBERO-Plus</a>). For the robot body and its onboard cameras, both factors are exactly what ROS can set precisely and verify, which is where switching pays off.</span></p>
+          <dl>
+            <dt><span class="zh">起始条件</span><span class="en">Start state</span></dt>
+            <dd><span class="zh">每个 VLA Skill 声明其起始条件：机械臂初始构型、底盘相对目标的位姿，以及机载相机（头部、腕部或底盘相机）相对工作区的位姿。对在自有示教数据上微调的 VLA，这些量取自示教首帧的统计范围，而非单一位姿。固定的第三人称相机无法由机器人调整，只能在部署时保持与训练时一致。</span>
+              <span class="en">Each VLA skill declares its start condition: the arm’s initial configuration, the base pose relative to the target, and the pose of onboard cameras (head, wrist or base) relative to the workspace. For a VLA fine-tuned on our own demonstrations, these are ranges taken from the first frames of the demonstrations rather than a single pose. Fixed third-person cameras cannot be adjusted by the robot and must simply match their training placement at deployment.</span></dd>
+            <dt><span class="zh">分工</span><span class="en">Roles</span></dt>
+            <dd><span class="zh">LLM 通过 ROS 技能执行对位；Runtime 以代码检查起始条件（例如经 TF 测得的位姿误差是否落在声明范围内），不满足则拒绝调用 VLA；执行中若评估器判定进展停滞或失败，由 Runtime 触发切回 ROS 重新对位，再交还 VLA，每次决策连同依据写入时间记忆。与提示词规则的区别不在于规则写在哪里，而在于由 Runtime 强制执行、可以复现，不依赖 LLM 是否遵守。</span>
+              <span class="en">The LLM performs the alignment through ROS skills; the runtime checks the start condition in code (for example, whether the pose error measured through TF falls within the declared range) and refuses to call the VLA if it is not met. If the evaluator reports stalled progress or failure during execution, the runtime switches back to ROS to re-align before the VLA resumes, and every decision is written to temporal memory with its inputs. What differs from prompt rules is not where the rule is written but that the runtime enforces it reproducibly, rather than relying on the LLM to comply.</span></dd>
+            <dt><span class="zh">相关工作</span><span class="en">Prior work</span></dt>
+            <dd><span class="zh"><a href="#p-harness">Harness VLA</a>（§03）在仿真中由规划器调用解析式原语为冻结 VLA 重新摆位，加上这套 harness 后，同一 VLA 在 LIBERO-PRO 上的成功率由 50.0% 提升到 82.4%；其代码库 RPent 的双臂 Franka 真机扩展（2026-09）由 LLM 按提示规则调度，相机固定，也未声明起始条件。RoboClaw 的不同在于：起始条件显式声明、由 Runtime 强制检查，并覆盖机载相机视角，基于 ROS 技能栈实现。</span>
+              <span class="en"><a href="#p-harness">Harness VLA</a> (§03) has a planner re-stage a frozen VLA with analytic primitives in simulation; with this harness, the same VLA rises from 50.0% to 82.4% on LIBERO-PRO. Its codebase RPent’s dual-Franka real-robot extension (Sep 2026) schedules by LLM prompt rules, with fixed cameras and no declared start condition. RoboClaw differs in declaring the start condition explicitly, having the runtime enforce it, covering onboard camera viewpoint, and building on a ROS skill stack.</span></dd>
+          </dl>
         </div>
       </div>
 
       <div class="content wide">
         <div class="roboclaw-vision">
-          <p class="reading"><b><span class="zh">总体方向：</span><span class="en">General direction:</span></b><span class="zh">LLM 按需查询状态、下达高层指令；Runtime 负责路由、在硬约束内混合执行 ROS/VLA、验证诊断与恢复，并从经验中演化，串成一个闭环。</span><span class="en">the LLM queries state on demand and issues high-level commands; the runtime handles routing, hybrid ROS/VLA execution within hard constraints, verification, diagnosis and recovery, and evolves from experience, all in one closed loop.</span></p>
+          <p class="reading"><b><span class="zh">总体设计：</span><span class="en">Overall design:</span></b><span class="zh">LLM 按需查询状态并下达高层指令；Runtime 负责后端选择、在硬约束内执行 ROS 与 VLA、验证与恢复，并从执行经验中持续改进，五个环节构成闭环。</span><span class="en">the LLM queries state on demand and issues high-level commands; the runtime selects backends, executes ROS and VLA within hard constraints, verifies and recovers, and improves from experience. The five stages form a closed loop.</span></p>
           <div class="direction-grid">
-            <article class="direction"><div class="n">01</div><h3><span class="zh">按需获取状态</span><span class="en">Query state</span></h3><p><span class="zh">关节状态、3D 空间记忆、时间记忆、对象信息都做成可查询的工具，LLM 按任务自己选、自己汇总；返回的信息都带置信度、新鲜度和来源。</span><span class="en">Joint states, 3D spatial memory, temporal memory and object info are exposed as query tools; the LLM picks and combines what the task needs, and every result carries confidence, freshness and provenance.</span></p></article>
-            <article class="direction"><div class="n">02</div><h3><span class="zh">组织任务</span><span class="en">Organize</span></h3><p><span class="zh">LLM 只下 pick object、move to room 这类高层指令；Skill Graph 表达依赖、分支、并行和资源约束；每个技能在计划阶段都支持 human-in-the-loop。</span><span class="en">The LLM issues only high-level commands such as pick object or move to room; skill graphs express dependencies, branches, parallelism and resources; every skill supports human-in-the-loop at plan time.</span></p></article>
-            <article class="direction"><div class="n">03</div><h3><span class="zh">选择与切换</span><span class="en">Choose &amp; switch</span></h3><p><span class="zh">按几何、接触、风险和历史表现选后端；执行中按实时状态切换，必要时用 ROS 为 VLA 恢复熟悉的条件。两类后端都在 Skill Runtime 的硬约束内运行。</span><span class="en">Pick the backend from geometry, contact, risk and track record; switch mid-task on live state, using ROS to restore conditions the VLA knows. Both run inside the skill runtime’s hard constraints.</span></p></article>
-            <article class="direction"><div class="n">04</div><h3><span class="zh">验证、诊断与恢复</span><span class="en">Verify &amp; diagnose</span></h3><p><span class="zh">动作完成由证据判断；失败时先自检、查日志定位原因（参考 ROSA），再决定重试、重观察、重规划、切换后端或请求协助。</span><span class="en">Evidence decides completion; on failure, self-inspect and read logs to find the cause (as in ROSA), then choose retry, re-observation, replanning, backend switching or assistance.</span></p></article>
-            <article class="direction"><div class="n">05</div><h3><span class="zh">积累与演化</span><span class="en">Evolve</span></h3><p><span class="zh">执行记录和 LLM 的推理一起写进时间记忆；从中提取 Skill Experience，生成候选技能，经评测后再替换旧版本。</span><span class="en">Execution traces and the LLM’s reasoning go into temporal memory; extract skill experience from them, propose candidates and promote them only after evaluation.</span></p></article>
+            <article class="direction"><div class="n">01</div><h3><span class="zh">按需获取状态</span><span class="en">Query state</span></h3><p><span class="zh">关节状态、3D 空间记忆、时间记忆与物体信息均以查询工具提供，由 LLM 按任务选取与组合，而不预先写入 Prompt；返回结果附带置信度、新鲜度与来源，据此决定直接使用还是重新观测。</span><span class="en">Joint states, 3D spatial memory, temporal memory and object information are exposed as query tools that the LLM selects and combines per task, rather than being preloaded into the prompt. Each result carries confidence, freshness and provenance, which determine whether it is used directly or re-observed.</span></p></article>
+            <article class="direction"><div class="n">02</div><h3><span class="zh">组织任务</span><span class="en">Organize</span></h3><p><span class="zh">LLM 仅下达 pick、move_to 等高层指令，由一小套正交、参数化的 Skill 组合完成任务（参考 RoboOS）；Skill Graph 表达依赖、分支与资源约束，计划阶段支持人工确认与修改。</span><span class="en">The LLM issues only high-level commands such as pick or move_to, and tasks are composed from a small set of orthogonal, parameterized skills (after RoboOS). A skill graph expresses dependencies, branches and resource constraints, and people can confirm or edit the plan before execution.</span></p></article>
+            <article class="direction"><div class="n">03</div><h3><span class="zh">选择与切换</span><span class="en">Choose &amp; switch</span></h3><p><span class="zh">依据目标几何、接触特性、风险与历史表现选择后端；VLA 调用前由 ROS 完成起始对位，执行中按状态切换。两类后端均在 Skill Runtime 的硬约束（限位、限速、碰撞检查）内运行，安全不依赖 LLM 判断。</span><span class="en">Choose the backend from target geometry, contact, risk and track record; ROS performs start alignment before each VLA call, and execution switches on live state. Both backends run inside the skill runtime’s hard constraints (joint and speed limits, collision checks), so safety never depends on LLM judgment.</span></p></article>
+            <article class="direction"><div class="n">04</div><h3><span class="zh">验证、诊断与恢复</span><span class="en">Verify &amp; diagnose</span></h3><p><span class="zh">以证据判定动作是否完成；失败时先自检并查询日志定位原因（参考 ROSA），再选择重试、重新观测、重新规划、切换后端或请求协助。</span><span class="en">Completion is judged from evidence. On failure, the runtime self-inspects and reads logs to locate the cause (as in ROSA), then chooses among retry, re-observation, replanning, backend switching and asking for help.</span></p></article>
+            <article class="direction"><div class="n">05</div><h3><span class="zh">积累与演化</span><span class="en">Evolve</span></h3><p><span class="zh">执行记录与 LLM 的推理（为何如此规划、为何选择该后端、为何判定失败）一并写入时间记忆，可按时间检索与回放；从中提炼 Skill 经验并生成候选技能，经评测后再替换旧版本。</span><span class="en">Execution traces and the LLM’s reasoning (why this plan, why this backend, why a step was judged a failure) are written to temporal memory, where they can be queried and replayed by time; skill experience is distilled from them, and candidate skills replace old versions only after evaluation.</span></p></article>
           </div>
-          <div class="vision-loop"><span class="zh">Query State → Plan → Route → Execute → Verify → Diagnose → Recover → Learn</span><span class="en">Query State → Plan → Route → Execute → Verify → Diagnose → Recover → Learn</span></div>
         </div>
       </div>
     </section>
@@ -1526,13 +1626,13 @@
         <div class="sub-head"><span class="zh">设计要求</span><span class="en">Design requirements</span></div>
         <div class="reqs">
           <div class="req"><b>R1</b><span class="zh">每条观测都带时间、坐标系和位姿。</span><span class="en">Every observation carries time, frame and pose.</span>
-            <span class="from">DimOS · plan.md P0-1</span></div>
+            <span class="from">DimOS</span></div>
           <div class="req"><b>R2</b><span class="zh">每个规划步骤都是带前置 / 后置条件的类型化技能。</span><span class="en">Every plan step is a typed skill with pre/post-conditions.</span>
             <span class="from">HoloAgent-0</span></div>
           <div class="req"><b>R3</b><span class="zh">每次 ROS / VLA 选择都要显式记录并附理由。</span><span class="en">Every ROS-vs-VLA choice is explicit and logged with its reason.</span>
             <span class="from"><span class="zh">新增：§04 的缺口</span><span class="en">new: the gap in §04</span></span></div>
           <div class="req"><b>R4</b><span class="zh">只有评估器给出证据才算完成，模型自述不算。</span><span class="en">A step is done only on evaluator evidence, never on the model saying so.</span>
-            <span class="from">Thea · Hi-VLA Design Study · plan.md P0-5</span></div>
+            <span class="from">Thea · Hi-VLA Design Study</span></div>
         </div>
       </div>
     </section>
@@ -1542,7 +1642,7 @@
       <div class="section-head">
         <div class="section-title">
           <h2><span class="zh"><span class="section-index">05</span>参考与链接</span><span class="en"><span class="section-index">05</span>References &amp; links</span></h2>
-          <p><span class="zh">链接状态与 GitHub star 核对于 2026-09-11。</span><span class="en">Link status and GitHub stars checked 11 Sep 2026.</span></p>
+          <p><span class="zh">链接状态与 GitHub star 核对于 2026-09-11（Harness VLA、LIBERO-Plus 与记忆方向文献为 09-15/16）。</span><span class="en">Link status and GitHub stars checked 11 Sep 2026 (Harness VLA, LIBERO-Plus and the memory reading on 15–16 Sep).</span></p>
         </div>
       </div>
 
@@ -1569,6 +1669,11 @@
             <a href="https://github.com/dimensionalOS/dimos" target="_blank" rel="noopener">GitHub ★4.5k</a>
             <a href="https://docs.dimensionalos.com" target="_blank" rel="noopener"><span class="zh">文档</span><span class="en">Docs</span></a>
             <a href="https://github.com/dimensionalOS/dimos/releases" target="_blank" rel="noopener"><span class="zh">发布记录</span><span class="en">Releases</span></a></div></li>
+          <li><div><span class="t">Harness VLA: Steering Frozen VLAs into Reliable Manipulation Primitives via Memory-Guided Agents</span> <span class="w">· Zhang et al., Tsinghua University et al., 2026</span><br>
+            <a href="https://arxiv.org/abs/2607.08448" target="_blank" rel="noopener">arXiv 2607.08448</a>
+            <a href="https://github.com/RLinf/RPent" target="_blank" rel="noopener">GitHub ★535</a>
+            <a href="https://harnessvla.github.io/" target="_blank" rel="noopener"><span class="zh">项目主页</span><span class="en">Project page</span></a>
+            <a href="https://rpent.readthedocs.io/en/latest/rst_source/usage/dual_franka.html" target="_blank" rel="noopener"><span class="zh">双臂 Franka 真机文档</span><span class="en">Dual-Franka docs</span></a></div></li>
           <li><div><span class="t">What Matters in Orchestrating Robot Policies: A Systematic Study of Hierarchical VLA Agents</span> <span class="w">· Hu et al., Google DeepMind, 2026</span><br>
             <a href="https://arxiv.org/abs/2606.10267" target="_blank" rel="noopener">arXiv 2606.10267</a>
             <a href="https://jiahenghu.github.io/hi-vla/" target="_blank" rel="noopener"><span class="zh">项目主页</span><span class="en">Project page</span></a></div></li>
@@ -1576,6 +1681,8 @@
             <a href="https://arxiv.org/abs/2604.14125" target="_blank" rel="noopener">arXiv 2604.14125</a>
             <a href="https://tianshuoy.github.io/HiVLA-page/" target="_blank" rel="noopener"><span class="zh">项目主页</span><span class="en">Project page</span></a>
             <span class="w"><span class="zh">代码待发布</span><span class="en">code forthcoming</span></span></div></li>
+          <li><div><span class="t">LIBERO-Plus: In-depth Robustness Analysis of Vision-Language-Action Models</span> <span class="w">· Fei et al., 2025</span><br>
+            <a href="https://arxiv.org/abs/2510.13626" target="_blank" rel="noopener">arXiv 2510.13626</a></div></li>
           <li><div><span class="t">ABot-AgentOS: A General Robotic Agent OS with Lifelong Multi-modal Memory</span> <span class="w">· Tian et al., AMAP CV Lab, 2026</span><br>
             <a href="https://arxiv.org/abs/2607.10350" target="_blank" rel="noopener">arXiv 2607.10350</a>
             <span class="w"><span class="zh">项目主页与 GitHub 返回 404</span><span class="en">project page and GitHub returned 404</span></span></div></li>
@@ -1586,9 +1693,6 @@
             <a href="https://github.com/RobotecAI/rai" target="_blank" rel="noopener">GitHub ★588</a></div></li>
           <li><div><span class="t">OpenMind OM1: cross-robot agent runtime and hardware abstraction layer</span> <span class="w">· OpenMind</span><br>
             <a href="https://github.com/OpenMind/OM1" target="_blank" rel="noopener">GitHub ★2.9k</a></div></li>
-          <li><div><span class="t"><span class="zh">记忆方向延伸阅读</span><span class="en">Memory-side reading</span></span>
-            <span class="w"><span class="zh">· When Memory Lies、KARMA、Zep/Graphiti、MemoryVLA 等，见仓库中的 <code>memory_research.md</code></span>
-              <span class="en">· When Memory Lies, KARMA, Zep/Graphiti, MemoryVLA and more. See <code>memory_research.md</code> in this repo</span></span></div></li>
         </ol>
       </div>
     </section>
