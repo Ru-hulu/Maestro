@@ -288,6 +288,12 @@
     .today li b { color: var(--text); }
     .today .how { color: var(--accent); font-weight: 600; }
 
+    .bullets { margin: 0; padding-left: 18px; font-size: 14.5px; color: var(--text-2); }
+    .bullets li { margin: 0 0 9px; }
+    .bullets li:last-child { margin-bottom: 0; }
+    .bullets li b { color: var(--text); font-weight: 650; }
+    .bullets li::marker { color: var(--accent); }
+
     /* ---------- proposal ---------- */
     .proposal { border: 1px solid var(--line); padding: 32px 28px; background: #fbfcfd; }
     .flow { display: grid; justify-items: start; gap: 7px; }
@@ -392,6 +398,26 @@
       </div>
 
       <div class="content">
+        <!-- EDIT: what the harness layer buys — conclusions from this review, each backed by a system in §03. -->
+        <div class="sub-head" style="margin-top:0"><span class="zh">为什么需要 Harness</span><span class="en">Why a harness</span></div>
+        <p class="reading"><span class="zh">VLA 任务失败，很多时候并不只是因为模型能力不足，而是缺少执行过程中的监督与纠错机制：动作完成后无人验证，失败后缺乏原因诊断，环境发生变化时，也没有机制将机器人重新调整到模型熟悉的状态。Harness 的作用就是补上这一层执行与管理能力，其带来的收益大致可以归纳为四点：</span>
+          <span class="en">When a robot fails to get something done, the model is often not the problem — nothing is watching. No one checks that the action actually finished, no one asks why it failed, and when the scene changes no one puts the robot back into a state the model knows. A harness is that missing layer, and it buys roughly four things:</span></p>
+        <ul class="bullets">
+          <li><span class="zh">针对环境变化，先把机器人和视角调回策略熟悉的条件再执行，不必重新训练模型。</span>
+            <span class="en">When the scene changes, the robot and its viewpoint are moved back to conditions the policy knows before it runs — no retraining needed.</span></li>
+          <li><span class="zh">动作算不算做完，由外部检查给出证据，而不是执行器自己判定成功。</span>
+            <span class="en">Whether a step is done is settled by an outside check, not by the executor declaring success.</span></li>
+          <li><span class="zh">机器人的状态、感知到的环境、完成的内容提供都可以查，LLM 按需要取用。</span>
+            <span class="en">The robot’s state, what it has seen and what it has done all stay queryable, and the LLM takes what it needs.</span></li>
+          <li><span class="zh">失败会留下原因和过程，下一次不必从头试起。</span>
+            <span class="en">Failures leave behind a cause and a trace, so the next attempt does not start from scratch.</span></li>
+        </ul>
+
+        <br>
+
+        <div class="sub-head" style="margin-top:0"><span class="zh"> 现有高星 Harness 系统分析</span><span class="en">Analysis of Existing Harness Systems</span></div>
+
+
         <!-- EDIT: the three findings -->
         <div class="summary-grid">
           <article class="summary-item">
@@ -1524,9 +1550,30 @@
             <dt><span class="zh">分工</span><span class="en">Roles</span></dt>
             <dd><span class="zh">LLM 通过 ROS 技能执行对位；Runtime 以代码检查起始条件（例如经 TF 测得的位姿误差是否落在声明范围内），不满足则拒绝调用 VLA；执行中若评估器判定进展停滞或失败，由 Runtime 触发切回 ROS 重新对位，再交还 VLA，每次决策连同依据写入时间记忆。与提示词规则的区别不在于规则写在哪里，而在于由 Runtime 强制执行、可以复现，不依赖 LLM 是否遵守。</span>
               <span class="en">The LLM performs the alignment through ROS skills; the runtime checks the start condition in code (for example, whether the pose error measured through TF falls within the declared range) and refuses to call the VLA if it is not met. If the evaluator reports stalled progress or failure during execution, the runtime switches back to ROS to re-align before the VLA resumes, and every decision is written to temporal memory with its inputs. What differs from prompt rules is not where the rule is written but that the runtime enforces it reproducibly, rather than relying on the LLM to comply.</span></dd>
+            <dt><span class="zh">扰动示例</span><span class="en">Perturbation</span></dt>
+            <dd><span class="zh">若示教数据中目标多出现在左前方，VLA 会习得与之匹配的接近与抓取轨迹；测试时目标被换到右侧，冻结的 VLA 仍可能沿用原有空间先验，去到错误位置、抓空，或以不合适的姿态起手。此时由 LLM 调用 ROS 先把底盘与机械臂带回声明的起始条件内，VLA 只负责最后的抓取。</span>
+              <span class="en">If demonstrations mostly place the target at the front left, the VLA learns approach and grasp trajectories to match. Swap the target to the right at test time and the frozen VLA may still follow that spatial prior — reaching the wrong place, closing on nothing, or entering from an unsuitable pose. The LLM then drives ROS to bring the base and arm back inside the declared start condition, and the VLA performs only the grasp.</span></dd>
             <dt><span class="zh">相关工作</span><span class="en">Prior work</span></dt>
             <dd><span class="zh"><a href="#p-harness">Harness VLA</a>（§03）在仿真中由规划器调用解析式原语为冻结 VLA 重新摆位，加上这套 harness 后，同一 VLA 在 LIBERO-PRO 上的成功率由 50.0% 提升到 82.4%；其代码库 RPent 的双臂 Franka 真机扩展（2026-09）由 LLM 按提示规则调度，相机固定，也未声明起始条件。RoboClaw 的不同在于：起始条件显式声明、由 Runtime 强制检查，并覆盖机载相机视角，基于 ROS 技能栈实现。</span>
               <span class="en"><a href="#p-harness">Harness VLA</a> (§03) has a planner re-stage a frozen VLA with analytic primitives in simulation; with this harness, the same VLA rises from 50.0% to 82.4% on LIBERO-PRO. Its codebase RPent’s dual-Franka real-robot extension (Sep 2026) schedules by LLM prompt rules, with fixed cameras and no declared start condition. RoboClaw differs in declaring the start condition explicitly, having the runtime enforce it, covering onboard camera viewpoint, and building on a ROS skill stack.</span></dd>
+          </dl>
+        </div>
+
+        <!-- EDIT: retry traces double as training data. §04 direction 05 links here via #retry-data. -->
+        <div class="keypoint" id="retry-data">
+          <span class="eyebrow"><span class="zh">核心设计 · 重试即数据</span><span class="en">Core design · Retries as data</span></span>
+          <p class="lead"><span class="zh">一次任务中的反复尝试本身就是带标签的数据。RoboClaw 将每次尝试的状态、决策、LLM 的推理（为何这样选、为何判定失败）与验证器给出的结果写入同一条记录：向前用于下一次决策，向后即可作为持续学习与强化学习的训练样本。</span>
+            <span class="en">Repeated attempts within one task are already labelled data. RoboClaw writes each attempt’s state, decision, the LLM’s reasoning (why this choice, why this was judged a failure) and the verifier’s outcome into one record: forward, it informs the next decision; backward, it is a training sample for continual and reinforcement learning.</span></p>
+          <dl>
+            <dt><span class="zh">记录内容</span><span class="en">Recorded</span></dt>
+            <dd><span class="zh">每次尝试写入一条记录：环境与机器人状态、所选后端与参数、推理与理由、验证证据、结果。失败原因取自 ROSA 式自检与日志，而非模型自述。同一任务内的多次重试按时间串成一条轨迹，与该任务的时间记忆同源。</span>
+              <span class="en">Each attempt writes one record: environment and robot state, chosen backend and parameters, reasoning and rationale, verification evidence, outcome. Failure causes come from ROSA-style self-inspection and logs rather than the model’s own account. Retries within a task are chained by time into a trajectory, held in the same temporal memory as the task itself.</span></dd>
+            <dt><span class="zh">两个用途</span><span class="en">Two uses</span></dt>
+            <dd><span class="zh">在线：检索相似情境下的历史记录，修正后端选择与起始条件范围，即本节一中的“经验利用”。离线：以验证器证据为奖励信号，同一情境下成功与失败的重试天然构成对比样本，可用于离线强化学习与偏好学习；记录中的推理文本则可用于蒸馏与微调。二者共用一份记录，不需要为训练单独埋点。</span>
+              <span class="en">Online: retrieve records from similar contexts to revise backend choice and start-condition ranges — the “use of experience” sub-problem above. Offline: verifier evidence serves as the reward signal, successful and failed retries in the same context form natural contrastive pairs for offline RL and preference learning, and the recorded reasoning supports distillation and fine-tuning. Both uses read one record; no separate instrumentation is added for training.</span></dd>
+            <dt><span class="zh">前提</span><span class="en">Requires</span></dt>
+            <dd><span class="zh">奖励的可信度取决于验证：执行器自报成功不能作为标签，标注一律取自评估器证据。记录须可复现：状态快照、技能版本与参数一并保存，否则无法离线重放，样本也无法归因到某一次决策。</span>
+              <span class="en">The reward is only as trustworthy as the verification: an executor reporting success is never a label, and every label comes from evaluator evidence. Records must be replayable — state snapshots, skill versions and parameters are stored alongside, or a sample can be neither replayed offline nor attributed to a particular decision.</span></dd>
           </dl>
         </div>
       </div>
@@ -1539,7 +1586,7 @@
             <article class="direction"><div class="n">02</div><h3><span class="zh">组织任务</span><span class="en">Organize</span></h3><p><span class="zh">LLM 仅下达 pick、move_to 等高层指令，由一小套正交、参数化的 Skill 组合完成任务（参考 RoboOS）；Skill Graph 表达依赖、分支与资源约束，计划阶段支持人工确认与修改。</span><span class="en">The LLM issues only high-level commands such as pick or move_to, and tasks are composed from a small set of orthogonal, parameterized skills (after RoboOS). A skill graph expresses dependencies, branches and resource constraints, and people can confirm or edit the plan before execution.</span></p></article>
             <article class="direction"><div class="n">03</div><h3><span class="zh">选择与切换</span><span class="en">Choose &amp; switch</span></h3><p><span class="zh">依据目标几何、接触特性、风险与历史表现选择后端；VLA 调用前由 ROS 完成起始对位，执行中按状态切换。两类后端均在 Skill Runtime 的硬约束（限位、限速、碰撞检查）内运行，安全不依赖 LLM 判断。</span><span class="en">Choose the backend from target geometry, contact, risk and track record; ROS performs start alignment before each VLA call, and execution switches on live state. Both backends run inside the skill runtime’s hard constraints (joint and speed limits, collision checks), so safety never depends on LLM judgment.</span></p></article>
             <article class="direction"><div class="n">04</div><h3><span class="zh">验证、诊断与恢复</span><span class="en">Verify &amp; diagnose</span></h3><p><span class="zh">以证据判定动作是否完成；失败时先自检并查询日志定位原因（参考 ROSA），再选择重试、重新观测、重新规划、切换后端或请求协助。</span><span class="en">Completion is judged from evidence. On failure, the runtime self-inspects and reads logs to locate the cause (as in ROSA), then chooses among retry, re-observation, replanning, backend switching and asking for help.</span></p></article>
-            <article class="direction"><div class="n">05</div><h3><span class="zh">积累与演化</span><span class="en">Evolve</span></h3><p><span class="zh">执行记录与 LLM 的推理（为何如此规划、为何选择该后端、为何判定失败）一并写入时间记忆，可按时间检索与回放；从中提炼 Skill 经验并生成候选技能，经评测后再替换旧版本。</span><span class="en">Execution traces and the LLM’s reasoning (why this plan, why this backend, why a step was judged a failure) are written to temporal memory, where they can be queried and replayed by time; skill experience is distilled from them, and candidate skills replace old versions only after evaluation.</span></p></article>
+            <article class="direction"><div class="n">05</div><h3><span class="zh">积累与演化</span><span class="en">Evolve</span></h3><p><span class="zh">执行记录与 LLM 的推理（为何如此规划、为何选择该后端、为何判定失败）一并写入时间记忆，可按时间检索与回放；从中提炼 Skill 经验并生成候选技能，经评测后再替换旧版本。同一批记录也是训练数据：以验证器证据为奖励，可用于离线强化学习与推理蒸馏（<a href="#retry-data">重试即数据</a>）。</span><span class="en">Execution traces and the LLM’s reasoning (why this plan, why this backend, why a step was judged a failure) are written to temporal memory, where they can be queried and replayed by time; skill experience is distilled from them, and candidate skills replace old versions only after evaluation. The same records are training data: with verifier evidence as the reward, they support offline RL and reasoning distillation (<a href="#retry-data">retries as data</a>).</span></p></article>
           </div>
         </div>
       </div>
