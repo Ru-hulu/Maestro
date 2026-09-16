@@ -13,6 +13,7 @@ inside the functions so this module loads on machines without ROS.
 
 from __future__ import annotations
 
+import math
 from collections.abc import Sequence
 from contextlib import contextmanager
 
@@ -23,8 +24,12 @@ PLAN_SERVICE = "/plan_kinematic_path"
 EXECUTE_ACTION = "/execute_trajectory"
 WAIT_SEC = 3.0  # how long to wait for move_group to show up
 PLANNING_TIME_SEC = 5.0  # OMPL time budget for one plan
-POSITION_TOLERANCE_M = 0.002
-ORIENTATION_TOLERANCE_RAD = 0.01
+# Goal-region radii. Measured on the OpenArm + Gazebo cell: (0.002 m, 0.01 rad)
+# made a keep-orientation +6 cm move fail 3/3 with GOAL_STATE_INVALID, while
+# (0.005 m, 0.03 rad) succeeded 3/3. A tight sphere plus a tight orientation cone
+# over-constrains the 7-DoF arm and starves the OMPL goal sampler.
+POSITION_TOLERANCE_M = 0.005
+ORIENTATION_TOLERANCE_RAD = 0.03
 
 MOVE_GROUP_MISSING = (
     "move_group is not running, so no collision-aware plan is possible. Start "
@@ -43,6 +48,7 @@ ERROR_NAMES = {
     -12: "GOAL_IN_COLLISION",
     -14: "GOAL_CONSTRAINTS_VIOLATED",
     -16: "INVALID_GOAL_CONSTRAINTS",
+    -27: "GOAL_STATE_INVALID",
     -31: "NO_IK_SOLUTION",
 }
 
@@ -50,16 +56,20 @@ ERROR_NAMES = {
 def plan_pose(
     side: str,
     position: Sequence[float],
-    quat_wxyz: Sequence[float],
+    quat_wxyz: Sequence[float] | None,
     speed_scale: float,
+    *,
+    orientation_tolerance_rad: float = ORIENTATION_TOLERANCE_RAD,
 ) -> dict[str, object]:
-    """Plan a collision-free wrist motion to a pose in arm_origin.
+    """Plan a collision-free wrist motion to a position or pose in arm_origin.
 
     The goal is handed to MoveIt in openarm_<side>_base_link: that frame is
     arm_origin shifted by base_from_origin with the same orientation, and it is
     always part of MoveIt's robot model. Planning starts from move_group's
-    current robot state. Returns the MoveIt result name and, on success, the
-    joint trajectory as plain lists that can be stored as JSON.
+    current robot state. When ``quat_wxyz`` is None, no orientation constraint
+    is sent and MoveIt may choose any wrist orientation. Returns the MoveIt
+    result name and, on success, the joint trajectory as plain lists that can
+    be stored as JSON.
     """
 
     from moveit_msgs.msg import (
@@ -90,20 +100,26 @@ def plan_pose(
     )
     position_goal.constraint_region.primitive_poses.append(center)
 
-    # Orientation goal: the requested wrist orientation with a small tolerance.
-    orientation_goal = OrientationConstraint(
-        link_name=link,
-        weight=1.0,
-        absolute_x_axis_tolerance=ORIENTATION_TOLERANCE_RAD,
-        absolute_y_axis_tolerance=ORIENTATION_TOLERANCE_RAD,
-        absolute_z_axis_tolerance=ORIENTATION_TOLERANCE_RAD,
-    )
-    orientation_goal.header.frame_id = frame
-    w, x, y, z = (float(value) for value in quat_wxyz)
-    orientation_goal.orientation.w = w
-    orientation_goal.orientation.x = x
-    orientation_goal.orientation.y = y
-    orientation_goal.orientation.z = z
+    orientation_constraints = []
+    if quat_wxyz is not None:
+        tolerance = float(orientation_tolerance_rad)
+        if not math.isfinite(tolerance) or not 0.0 < tolerance <= math.pi:
+            raise ValueError("orientation_tolerance_rad must be in (0, pi]")
+        orientation_goal = OrientationConstraint(
+            link_name=link,
+            weight=1.0,
+            absolute_x_axis_tolerance=tolerance,
+            absolute_y_axis_tolerance=tolerance,
+            absolute_z_axis_tolerance=tolerance,
+        )
+        orientation_goal.parameterization = OrientationConstraint.ROTATION_VECTOR
+        orientation_goal.header.frame_id = frame
+        w, x, y, z = (float(value) for value in quat_wxyz)
+        orientation_goal.orientation.w = w
+        orientation_goal.orientation.x = x
+        orientation_goal.orientation.y = y
+        orientation_goal.orientation.z = z
+        orientation_constraints.append(orientation_goal)
 
     request = MotionPlanRequest(
         group_name=f"{kinematics.side}_arm",
@@ -117,7 +133,7 @@ def plan_pose(
     request.goal_constraints.append(
         Constraints(
             position_constraints=[position_goal],
-            orientation_constraints=[orientation_goal],
+            orientation_constraints=orientation_constraints,
         )
     )
 
@@ -148,6 +164,7 @@ def plan_pose(
             for point in trajectory.points
         ],
     }
+
 
 
 def execute(

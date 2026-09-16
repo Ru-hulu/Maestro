@@ -2,13 +2,19 @@
 
 from __future__ import annotations
 
+import math
 from typing import Annotated, Literal
 
 from mcp.server.fastmcp import FastMCP
 from mcp.types import ToolAnnotations
 from pydantic import BaseModel, Field
 
-from .program import execute_plan, plan_pose
+from .program import (
+    RelativeFrame,
+    RelativeOrientationMode,
+    execute_plan,
+    plan_relative,
+)
 
 
 class MotionPlanSummary(BaseModel):
@@ -24,7 +30,7 @@ class MotionPlanSummary(BaseModel):
     arm: Literal["right", "left"] = Field(description="Which arm was planned.")
     frame: str = Field(description="Frame of target_pose. Always arm_origin.")
     target_pose: list[float] = Field(
-        description="Wrist target [x, y, z, qw, qx, qy, qz] in arm_origin.",
+        description="Resolved wrist target position or pose in arm_origin.",
     )
     point_count: int = Field(description="Number of trajectory samples stored.")
     duration_sec: float = Field(description="Planned motion duration in seconds.")
@@ -49,26 +55,13 @@ def register_openarm_motion_tools(mcp: FastMCP) -> None:
 
     @mcp.tool(
         name="plan_openarm_pose",
-        title="Plan OpenArm Motion (MoveIt)",
+        title="Plan Relative OpenArm EE Motion (MoveIt)",
         description=(
-            "Plans a trajectory with MoveIt 2 that moves one arm's wrist "
-            "(openarm_<arm>_ee_base_link) to x, y, z in the arm_origin frame, in "
-            "metres (x forward, y left, z up). The gripper fingertips point along "
-            "the negative z axis of the wrist frame openarm_<arm>_ee_base_link. "
-            "The wrist orientation starts from "
-            "the current one: roll_deg, pitch_deg and yaw_deg rotate it about the "
-            "arm_origin x, y and z axes (applied in that order), and leaving all "
-            "three at 0 keeps it unchanged. To only tilt or turn the wrist, pass "
-            "the current x, y, z from get_openarm_ee_pose. The start state is read "
-            "from the robot: never supply joint angles, and never type coordinates "
-            "you estimated from camera images or perception results. MoveIt checks "
-            "robot self-collision and objects in its planning scene; the table is "
-            "not in the scene yet, so keep targets clear of it. The trajectory is "
-            "stored under plan_id and not returned. If ok is false, error says "
-            "why: NO_IK_SOLUTION or GOAL_CONSTRAINTS_VIOLATED means the pose is "
-            "unreachable with the requested orientation, PLANNING_FAILED may "
-            "succeed on one retry, and START_STATE_IN_COLLISION cannot be fixed "
-            "by changing the target. Then pass plan_id to execute_openarm_plan."
+            "Plan a relative wrist motion from the latest measured pose with MoveIt. "
+            "dx, dy, dz are metres in arm_origin (fixed) or tool (wrist-local). "
+            "keep preserves orientation; relative applies the axis-angle rotation_vector; "
+            "tolerant relaxes that orientation; free omits it. The trajectory is stored, "
+            "not executed; pass a successful plan_id to execute_openarm_plan."
         ),
         annotations=ToolAnnotations(
             readOnlyHint=False,
@@ -79,44 +72,44 @@ def register_openarm_motion_tools(mcp: FastMCP) -> None:
     )
     async def plan_openarm_pose(
         arm: Annotated[Literal["right", "left"], Field(description="Which arm to move.")],
-        x: Annotated[float, Field(description="Wrist target x (forward) in arm_origin, metres.")],
-        y: Annotated[float, Field(description="Wrist target y (left) in arm_origin, metres.")],
-        z: Annotated[float, Field(description="Wrist target z (up) in arm_origin, metres.")],
-        roll_deg: Annotated[
-            float,
+        dx: Annotated[float, Field(description="Relative x translation in metres.")] = 0.0,
+        dy: Annotated[float, Field(description="Relative y translation in metres.")] = 0.0,
+        dz: Annotated[float, Field(description="Relative z translation in metres.")] = 0.0,
+        translation_frame: Annotated[
+            RelativeFrame,
+            Field(description="arm_origin for fixed axes; tool for wrist-local axes."),
+        ] = "arm_origin",
+        orientation_mode: Annotated[
+            RelativeOrientationMode,
+            Field(description="keep, relative, tolerant, or free."),
+        ] = "keep",
+        rotation_vector: Annotated[
+            list[float] | None,
             Field(
-                ge=-180.0,
-                le=180.0,
-                description="Rotate the current wrist orientation about the arm_origin x axis, degrees.",
+                min_length=3,
+                max_length=3,
+                description="Axis times angle in radians; used by relative or tolerant.",
             ),
-        ] = 0.0,
-        pitch_deg: Annotated[
+        ] = None,
+        rotation_frame: Annotated[
+            RelativeFrame,
+            Field(description="Frame of rotation_vector."),
+        ] = "tool",
+        orientation_tolerance_rad: Annotated[
             float,
-            Field(
-                ge=-180.0,
-                le=180.0,
-                description="Rotate the current wrist orientation about the arm_origin y axis, degrees.",
-            ),
-        ] = 0.0,
-        yaw_deg: Annotated[
-            float,
-            Field(
-                ge=-180.0,
-                le=180.0,
-                description="Rotate the current wrist orientation about the arm_origin z axis, degrees.",
-            ),
-        ] = 0.0,
+            Field(gt=0.0, le=math.pi, description="Tolerance for tolerant mode."),
+        ] = 0.20,
     ) -> MotionPlanSummary:
-        """Plan with MoveIt and return a summary without the trajectory samples."""
+        """Resolve a relative EE command and store its MoveIt plan."""
 
-        plan = await plan_pose(
+        plan = await plan_relative(
             arm,
-            x,
-            y,
-            z,
-            roll_deg=roll_deg,
-            pitch_deg=pitch_deg,
-            yaw_deg=yaw_deg,
+            (dx, dy, dz),
+            translation_frame=translation_frame,
+            orientation_mode=orientation_mode,
+            rotation_vector=rotation_vector,
+            rotation_frame=rotation_frame,
+            orientation_tolerance_rad=orientation_tolerance_rad,
         )
         points = plan["points"]
         return MotionPlanSummary(

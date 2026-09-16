@@ -323,7 +323,7 @@ def _add_base_livox_mid360(root: ET.Element) -> None:
     )
     _add_text(sensor, "always_on", "true")
     _add_text(sensor, "update_rate", "10")
-    _add_text(sensor, "visualize", "true")
+    _add_text(sensor, "visualize", "false")
     ray = ET.SubElement(sensor, "ray")
     scan = ET.SubElement(ray, "scan")
     horizontal = ET.SubElement(scan, "horizontal")
