@@ -27,11 +27,13 @@ register_mock_localization_tools(mcp, localization_manager)
 register_path_tracking_tools(mcp, tracking_manager)
 register_hybrid_astar_planner_tool(mcp)
 register_openarm_reach_tools(mcp)
-register_openarm_motion_tools(mcp)
 
-# Keep the legacy implementation, but hide its planning and execution tools.
-for tool_name in ("plan_openarm_reach", "execute_openarm_reach"):
+# Keep the legacy implementation, but hide its tools. get_openarm_ee_pose must go
+# before openarm_motion registers its own: FastMCP keeps the first tool of a name.
+for tool_name in ("get_openarm_ee_pose", "plan_openarm_reach", "execute_openarm_reach"):
     mcp.remove_tool(tool_name)
+
+register_openarm_motion_tools(mcp)
 
 register_sam3_segmentation_tools(mcp, sam3_manager)
 register_gazebo_realsense_camera_tool(mcp)

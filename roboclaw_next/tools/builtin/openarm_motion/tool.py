@@ -1,4 +1,4 @@
-"""MCP contracts for MoveIt-backed OpenArm motion planning and execution."""
+"""MCP contracts for OpenArm pose reading and MoveIt-backed motion."""
 
 from __future__ import annotations
 
@@ -13,8 +13,26 @@ from .program import (
     RelativeFrame,
     RelativeOrientationMode,
     execute_plan,
+    get_ee_pose,
     plan_relative,
 )
+
+
+class EePoseResult(BaseModel):
+    """Current wrist pose in arm_origin, with the fingertip direction."""
+
+    arm: Literal["right", "left"] = Field(description="Which arm was read.")
+    frame: str = Field(description="Pose frame. Always arm_origin.")
+    pose: list[float] = Field(
+        description="Wrist pose [px, py, pz, qw, qx, qy, qz] in metres and unit quaternion.",
+    )
+    fingertip_direction: list[float] = Field(
+        description=(
+            "Unit vector in arm_origin along which the gripper fingertips point "
+            "(wrist-local -Z). [0, 0, -1] is straight down, [1, 0, 0] is forward."
+        ),
+    )
+    joints: list[float] = Field(description="The 7 arm joints the pose was computed from.")
 
 
 class MotionPlanSummary(BaseModel):
@@ -54,14 +72,42 @@ def register_openarm_motion_tools(mcp: FastMCP) -> None:
     """Register the MoveIt-backed OpenArm motion tools."""
 
     @mcp.tool(
+        name="get_openarm_ee_pose",
+        title="Get OpenArm EE Pose",
+        description=(
+            "Read the OpenArm wrist pose from the arm's real joint angles; do not "
+            "supply them. Values are in the arm_origin frame (+X forward, +Y left, "
+            "+Z up), in metres. pose is [px, py, pz, qw, qx, qy, qz], with the "
+            "quaternion w first. fingertip_direction is the unit vector the gripper "
+            "fingertips point along: [0, 0, -1] is straight down and [1, 0, 0] is "
+            "forward. Read the fingertip direction from it, not from the quaternion. "
+            "Fails if the robot is not publishing fresh joint states."
+        ),
+        annotations=ToolAnnotations(
+            readOnlyHint=True,
+            destructiveHint=False,
+            idempotentHint=True,
+            openWorldHint=False,
+        ),
+    )
+    async def get_openarm_ee_pose(
+        arm: Annotated[Literal["right", "left"], Field(description="Which arm to read.")],
+    ) -> EePoseResult:
+        """Return the current wrist pose and fingertip direction."""
+
+        return EePoseResult.model_validate(await get_ee_pose(arm))
+
+    @mcp.tool(
         name="plan_openarm_pose",
         title="Plan Relative OpenArm EE Motion (MoveIt)",
         description=(
             "Plan a relative wrist motion from the latest measured pose with MoveIt. "
             "dx, dy, dz are metres in arm_origin (fixed) or tool (wrist-local). "
-            "keep preserves orientation; relative applies the axis-angle rotation_vector; "
-            "tolerant relaxes that orientation; free omits it. The trajectory is stored, "
-            "not executed; pass a successful plan_id to execute_openarm_plan."
+            "arm_line (default) points the fingertips along the line from the shoulder "
+            "to the target, as on a straight arm; keep preserves orientation; relative "
+            "applies the axis-angle rotation_vector; tolerant relaxes that orientation; "
+            "free omits it. The trajectory is stored, not executed; pass a successful "
+            "plan_id to execute_openarm_plan."
         ),
         annotations=ToolAnnotations(
             readOnlyHint=False,
@@ -81,8 +127,8 @@ def register_openarm_motion_tools(mcp: FastMCP) -> None:
         ] = "arm_origin",
         orientation_mode: Annotated[
             RelativeOrientationMode,
-            Field(description="keep, relative, tolerant, or free."),
-        ] = "keep",
+            Field(description="arm_line, keep, relative, tolerant, or free."),
+        ] = "arm_line",
         rotation_vector: Annotated[
             list[float] | None,
             Field(

@@ -13,7 +13,7 @@ from collections.abc import Sequence
 from typing import Literal
 
 from robot_runtime.openarm_control import moveit_client
-from robot_runtime.openarm_ik import ORIGIN_FRAME, fk
+from robot_runtime.openarm_ik import ORIGIN_FRAME, arm as arm_model, fk
 from roboclaw_next.tools.builtin.openarm_reach.program import (
     REPOSITORY_ROOT,
     load_plan,
@@ -25,9 +25,27 @@ from roboclaw_next.tools.builtin.openarm_reach.program import (
 PLAN_ROOT = REPOSITORY_ROOT / "runtime_data" / "openarm_motion"
 SPEED_SCALE = 0.2  # fraction of the joint velocity and acceleration limits
 
-RelativeOrientationMode = Literal["keep", "relative", "tolerant", "free"]
+RelativeOrientationMode = Literal["arm_line", "keep", "relative", "tolerant", "free"]
 RelativeFrame = Literal["arm_origin", "tool"]
 DEFAULT_RELATIVE_ORIENTATION_TOLERANCE_RAD = 0.20
+
+
+async def get_ee_pose(arm: str) -> dict[str, object]:
+    """Read the wrist pose in arm_origin from the real joints.
+
+    Besides pose[7], the result carries the fingertip direction, so the model
+    never has to work it out from the quaternion.
+    """
+
+    joints = await read_joints(arm)
+    pose = fk(arm, joints)
+    return {
+        "arm": arm,
+        "frame": ORIGIN_FRAME,
+        "pose": list(pose),
+        "fingertip_direction": fingertip_direction(pose[3:]),
+        "joints": list(joints),
+    }
 
 
 async def plan_pose(
@@ -62,7 +80,7 @@ async def plan_relative(
     translation: Sequence[float],
     *,
     translation_frame: RelativeFrame = "arm_origin",
-    orientation_mode: RelativeOrientationMode = "keep",
+    orientation_mode: RelativeOrientationMode = "arm_line",
     rotation_vector: Sequence[float] | None = None,
     rotation_frame: RelativeFrame = "tool",
     orientation_tolerance_rad: float = DEFAULT_RELATIVE_ORIENTATION_TOLERANCE_RAD,
@@ -70,21 +88,26 @@ async def plan_relative(
 ) -> dict[str, object]:
     """Plan from the latest EE pose using a relative SE(3) command.
 
-    ``translation`` is expressed in ``translation_frame``. ``rotation_vector``
-    is axis multiplied by angle in radians and is composed on the right in the
-    tool frame or on the left in ``arm_origin``. The function snapshots the
-    joints once, computes the absolute target internally, and stores the MoveIt
-    plan for the existing ``execute_openarm_plan`` tool.
+    ``translation`` is expressed in ``translation_frame``. By default the
+    target orientation is not derived from the current one: the fingertips
+    point along the line from the shoulder centre to the target position, as
+    they would on a straight arm. ``rotation_vector`` is axis multiplied by
+    angle in radians and is composed on the right in the tool frame or on the
+    left in ``arm_origin``. The function snapshots the joints once, computes
+    the absolute target internally, and stores the MoveIt plan for the
+    existing ``execute_openarm_plan`` tool.
 
     Args:
         arm: Arm to plan for, either ``"right"`` or ``"left"``.
         translation: Relative EE translation ``[dx, dy, dz]`` in metres.
         translation_frame: Frame of ``translation``. ``"arm_origin"`` uses
             fixed robot axes; ``"tool"`` uses the current wrist-local axes.
-        orientation_mode: How to constrain the target orientation. ``"keep"``
-            preserves the current orientation, ``"relative"`` applies
-            ``rotation_vector``, ``"tolerant"`` applies it with a relaxed
-            tolerance, and ``"free"`` sends no orientation constraint.
+        orientation_mode: How to constrain the target orientation.
+            ``"arm_line"`` uses the straight-arm orientation from
+            ``arm_line_orientation``, ``"keep"`` preserves the current
+            orientation, ``"relative"`` applies ``rotation_vector``,
+            ``"tolerant"`` applies it with a relaxed tolerance, and ``"free"``
+            sends no orientation constraint.
         rotation_vector: Relative axis-angle rotation ``[rx, ry, rz]`` in
             radians, where the direction is the rotation axis and the norm is
             the angle. ``None`` means zero rotation.
@@ -115,6 +138,7 @@ async def plan_relative(
         orientation_mode=orientation_mode,
         rotation_vector=delta_rotation,
         rotation_frame=rotation_frame,
+        shoulder=shoulder_position(arm),
     )
 
     if orientation_mode == "tolerant":
@@ -217,8 +241,13 @@ def compose_relative_target(
     orientation_mode: RelativeOrientationMode,
     rotation_vector: Sequence[float],
     rotation_frame: RelativeFrame,
+    shoulder: Sequence[float],
 ) -> tuple[tuple[float, float, float], tuple[float, float, float, float] | None]:
-    """Compose a relative translation and rotation with a pose[7] in arm_origin."""
+    """Compose a relative translation and rotation with a pose[7] in arm_origin.
+
+    ``shoulder`` is the start of the line that ``orientation_mode="arm_line"``
+    points the fingertips along.
+    """
 
     pose = tuple(float(value) for value in current_pose)
     if len(pose) != 7 or not all(math.isfinite(value) for value in pose):
@@ -234,7 +263,7 @@ def compose_relative_target(
     target_position = tuple(pose[index] + delta_position[index] for index in range(3))
 
     rotation_angle = math.sqrt(sum(component * component for component in delta_rotation))
-    if orientation_mode in {"keep", "free"} and rotation_angle > 1e-12:
+    if orientation_mode in {"arm_line", "keep", "free"} and rotation_angle > 1e-12:
         raise ValueError(
             f"rotation_vector requires orientation_mode='relative' or 'tolerant', got {orientation_mode!r}"
         )
@@ -242,6 +271,8 @@ def compose_relative_target(
         return target_position, None
     if orientation_mode == "keep":
         return target_position, current_quat
+    if orientation_mode == "arm_line":
+        return target_position, arm_line_orientation(shoulder, target_position)
     if orientation_mode not in {"relative", "tolerant"}:
         raise ValueError(f"unsupported relative orientation mode: {orientation_mode!r}")
 
@@ -253,6 +284,68 @@ def compose_relative_target(
     else:
         raise ValueError("rotation_frame must be 'arm_origin' or 'tool'")
     return target_position, _normalize_quaternion(target_quat)
+
+
+def shoulder_position(arm: str) -> tuple[float, float, float]:
+    """Return the shoulder centre of ``arm`` in arm_origin.
+
+    This is the pivot of joint 2, where the axes of joints 1 to 3 meet. Joint 2
+    sits on the axis of joint 1, so the point never moves, and the upper arm
+    always starts there.
+    """
+
+    kinematics = arm_model(arm)
+    first, second = kinematics.hinges[:2]
+    return tuple(
+        kinematics.base_from_origin[index] + first.origin[index] + second.origin[index]
+        for index in range(3)
+    )
+
+
+def arm_line_orientation(
+    shoulder: Sequence[float], target: Sequence[float]
+) -> tuple[float, float, float, float]:
+    """Return the wrist orientation of a straight arm from shoulder towards target.
+
+    The fingertips (wrist-local -Z) point along the shoulder-to-target line.
+    The roll about that line is the one given by joints 1 and 2 alone, with
+    every other joint at zero, so wrist-local X stays in the arm_origin XZ
+    plane. A line along arm_origin Y leaves that roll undefined; joint 1 is
+    then taken as zero.
+    """
+
+    start = _vector3(shoulder, "shoulder")
+    end = _vector3(target, "target")
+    line = tuple(end[index] - start[index] for index in range(3))
+    length = math.sqrt(sum(component * component for component in line))
+    if length <= 1e-9:
+        raise ValueError("target is at the shoulder, so the arm line has no direction")
+    dx, dy, dz = (component / length for component in line)
+
+    # The arm hanging straight down has the identity orientation. Joint 2 lifts
+    # it about arm_origin X, then joint 1 swings it about arm_origin Y. The axis
+    # signs differ between the arms, but the resulting orientation does not.
+    about_x = math.asin(max(-1.0, min(1.0, dy))) # 已知方向向量里的 Y 分量，反推出绕 X 轴需要多少角度。
+    about_y = math.atan2(-dx, -dz) if math.hypot(dx, dz) > 1e-9 else 0.0 # 给一个 (x,z) 点，atan2 告诉默认-z方向绕y轴转多少度。
+    return _normalize_quaternion(
+        _hamilton_product( # 两个旋转合并为一个旋转
+            (math.cos(about_y / 2.0), 0.0, math.sin(about_y / 2.0), 0.0),
+            (math.cos(about_x / 2.0), math.sin(about_x / 2.0), 0.0, 0.0),
+        )# 最后归一化出四元数
+    )
+
+
+def fingertip_direction(quat_wxyz: Sequence[float]) -> list[float]:
+    """Return the unit vector in arm_origin along which the fingertips point.
+
+    The fingertips point along wrist-local -Z, so [0, 0, -1] is straight down.
+    Values are rounded to 4 decimals so float noise such as 6e-17 does not read
+    as a direction component.
+    """
+
+    direction = _rotate_vector(quat_wxyz, (0.0, 0.0, -1.0))
+    # Adding 0.0 turns a rounded -0.0 into 0.0.
+    return [round(component, 4) + 0.0 for component in direction]
 
 
 def _vector3(values: Sequence[float], name: str) -> tuple[float, float, float]:
