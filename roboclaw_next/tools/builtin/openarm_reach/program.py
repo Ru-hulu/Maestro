@@ -135,12 +135,30 @@ def build_ee_pose(arm: str, joints: Sequence[float]) -> dict[str, object]:
     """FK payload for a given joint vector. Pure; ROS is the caller's problem."""
 
     values = [float(value) for value in joints]
+    pose = fk(arm, values)
     return {
         "arm": arm,
         "frame": ORIGIN_FRAME,
-        "pose": list(fk(arm, values)),
+        "pose": list(pose),
+        "rpy_deg": quaternion_to_rpy_deg(pose[3:]),
         "joints": values,
     }
+
+
+def quaternion_to_rpy_deg(quat_wxyz: Sequence[float]) -> list[float]:
+    """Convert a wxyz quaternion to [roll, pitch, yaw] in degrees.
+
+    Roll, pitch and yaw are rotations about the fixed arm_origin x, y and z
+    axes applied in that order, R = Rz(yaw) * Ry(pitch) * Rx(roll), the same
+    convention as ROS setRPY. Near pitch = +-90 degrees roll and yaw are not
+    unique (gimbal lock).
+    """
+
+    w, x, y, z = (float(value) for value in quat_wxyz)
+    roll = math.atan2(2.0 * (w * x + y * z), 1.0 - 2.0 * (x * x + y * y))
+    pitch = math.asin(max(-1.0, min(1.0, 2.0 * (w * y - z * x))))
+    yaw = math.atan2(2.0 * (w * z + x * y), 1.0 - 2.0 * (y * y + z * z))
+    return [math.degrees(roll), math.degrees(pitch), math.degrees(yaw)]
 
 
 def plan_from_joints(
